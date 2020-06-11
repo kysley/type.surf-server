@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "lib": [
+      "esnext"
+    ],
+    "strict": true,
+    "rootDir": "api",
+    "plugins": [
+      {
+        "name": "nexus/typescript-language-service"
+      }
+    ]
+  },
+  "include": [
+    "api"
+  ]
+}

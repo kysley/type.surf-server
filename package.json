@@ -1,0 +1,22 @@
+{
+  "name": "my-nexus-app-4899096037984543",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "nexus": "0.23.0",
+    "nexus-plugin-prisma": "^0.9.0"
+  },
+  "scripts": {
+    "format": "npx prettier --write './**/*.{ts,md}'",
+    "dev": "nexus dev",
+    "build": "nexus build",
+    "start": "node .nexus/build/api"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "devDependencies": {
+    "prettier": "^2.0.5"
+  }
+}
