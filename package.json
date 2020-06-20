@@ -1,9 +1,27 @@
 {
-  "name": "my-nexus-app-4899096037984543",
+  "name": "thockapi",
   "license": "UNLICENSED",
+  "version": "1.0.0",
   "dependencies": {
-    "nexus": "0.23.0",
-    "nexus-plugin-prisma": "^0.9.0"
+    "@prisma/cli": "2.0.1",
+    "@prisma/client": "2.0.1",
+    "apollo-server-express": "^2.15.0",
+    "bcrypt": "^5.0.0",
+    "dotenv": "^8.2.0",
+    "graphql": "^14.6.0",
+    "graphql-middleware": "^4.0.2",
+    "graphql-shield": "^7.3.2",
+    "jsonwebtoken": "^8.5.1",
+    "nexus": "^0.24.2",
+    "nexus-plugin-jwt-auth": "^1.2.0",
+    "nexus-plugin-prisma": "^0.10.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/jsonwebtoken": "^8.5.0",
+    "prettier": "^2.0.5",
+    "ts-node-dev": "1.0.0-pre.49",
+    "typescript": "^3.9.5"
   },
   "scripts": {
     "format": "npx prettier --write './**/*.{ts,md}'",
@@ -15,8 +33,5 @@
     "semi": false,
     "singleQuote": true,
     "trailingComma": "all"
-  },
-  "devDependencies": {
-    "prettier": "^2.0.5"
   }
 }

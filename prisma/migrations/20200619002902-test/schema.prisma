@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 model Account {
@@ -20,14 +20,11 @@ model Account {
   updatedAt         DateTime    @updatedAt
   username          String      @unique
   usernameLowercase String?     @unique
-  digits            Int
-  rank              Rank
-  history           Result[]
-  maps              Map[]
-  discordLinked     Boolean     @default(false)
+  tests             Test[]
+  trials            Trial[]
 }
 
-model Result {
+model Test {
   correct     Int
   corrections Int
   cpm         Int
@@ -39,13 +36,13 @@ model Result {
   updatedAt   DateTime   @updatedAt
   wordIndex   Int
   wpm         Int
-  Map         Map?       @relation(fields: [mapId], references: [id])
-  mapId       String?
+  trial       Trial?     @relation(fields: [trialId], references: [id])
+  trialId     String?
   account     Account    @relation(fields: [accountId], references: [id])
   accountId   String
 }
 
-model Map {
+model Trial {
   createdAt     DateTime    @default(now())
   custom        Boolean?    @default(false)
   difficulty    Difficulty?
@@ -56,7 +53,7 @@ model Map {
   private       Boolean?    @default(false)
   updatedAt     DateTime    @updatedAt
   wordSet       String
-  results       Result[]
+  results       Test[]
   owner         Account?    @relation(fields: [ownerId], references: [id])
   ownerId       String?
 }
@@ -79,24 +76,4 @@ enum Role {
   ADMIN
   PRO
   BETA
-}
-
-enum Rank {
-  Novice
-  Beginner
-  Competent
-  Proficient
-  Expert
-  Master
-}
-
-enum Mode {
-  // Random? Standard? Classic?
-  Classic
-  Rush
-  Perfectionist
-  // Race? Classic? Endurance?
-  Race
-  TimeAttack
-  Takedown
 }
