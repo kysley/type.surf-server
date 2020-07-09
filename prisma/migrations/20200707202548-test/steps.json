@@ -3,6 +3,26 @@
   "steps": [
     {
       "tag": "CreateEnum",
+      "enum": "Difficulty",
+      "values": [
+        "EASY",
+        "NORMAL",
+        "MEDIUM",
+        "HARD"
+      ]
+    },
+    {
+      "tag": "CreateEnum",
+      "enum": "Role",
+      "values": [
+        "USER",
+        "ADMIN",
+        "PRO",
+        "BETA"
+      ]
+    },
+    {
+      "tag": "CreateEnum",
       "enum": "Rank",
       "values": [
         "Novice",
@@ -17,13 +37,362 @@
       "tag": "CreateEnum",
       "enum": "Mode",
       "values": [
-        "Random",
-        "Rush",
-        "Perfectionist",
+        "Classic",
         "Race",
         "TimeAttack",
         "Takedown"
       ]
+    },
+    {
+      "tag": "CreateEnum",
+      "enum": "Mods",
+      "values": [
+        "Rush",
+        "Perfectionist"
+      ]
+    },
+    {
+      "tag": "CreateSource",
+      "source": "db"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Source",
+        "source": "db"
+      },
+      "argument": "provider",
+      "value": "\"postgresql\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Source",
+        "source": "db"
+      },
+      "argument": "url",
+      "value": "\"***\""
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Account"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "color",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "confirmed",
+      "type": "Boolean",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "confirmed"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "confirmed"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "false"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "email",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "email"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "lastSeen",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "lastSeen"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "lastSeen"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "password",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "role",
+      "type": "Role",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "role"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "role"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "USER"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "username",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "username"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "usernameLowercase",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "usernameLowercase"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "digits",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "rank",
+      "type": "Rank",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "history",
+      "type": "Result",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "maps",
+      "type": "Map",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "discordLinked",
+      "type": "Boolean",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "discordLinked"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "discordLinked"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "false"
     },
     {
       "tag": "CreateModel",
@@ -142,9 +511,41 @@
     {
       "tag": "CreateField",
       "model": "Result",
-      "field": "type",
-      "type": "ResultType",
+      "field": "mode",
+      "type": "Mode",
       "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Result",
+          "field": "mode"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Result",
+          "field": "mode"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "Classic"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Result",
+      "field": "mods",
+      "type": "Mods",
+      "arity": "List"
     },
     {
       "tag": "CreateField",
@@ -181,7 +582,7 @@
     {
       "tag": "CreateField",
       "model": "Result",
-      "field": "Map",
+      "field": "map",
       "type": "Map",
       "arity": "Optional"
     },
@@ -191,7 +592,7 @@
         "path": {
           "tag": "Field",
           "model": "Result",
-          "field": "Map"
+          "field": "map"
         },
         "directive": "relation"
       }
@@ -203,7 +604,7 @@
         "path": {
           "tag": "Field",
           "model": "Result",
-          "field": "Map"
+          "field": "map"
         },
         "directive": "relation"
       },
@@ -217,7 +618,7 @@
         "path": {
           "tag": "Field",
           "model": "Result",
-          "field": "Map"
+          "field": "map"
         },
         "directive": "relation"
       },
@@ -362,6 +763,45 @@
     {
       "tag": "CreateField",
       "model": "Map",
+      "field": "mods",
+      "type": "Mods",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Map",
+      "field": "mode",
+      "type": "Mode",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Map",
+          "field": "mode"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Map",
+          "field": "mode"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "Classic"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Map",
       "field": "id",
       "type": "String",
       "arity": "Required"
@@ -405,20 +845,6 @@
     {
       "tag": "CreateField",
       "model": "Map",
-      "field": "maxWordLength",
-      "type": "Int",
-      "arity": "Optional"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Map",
-      "field": "minWordLength",
-      "type": "Int",
-      "arity": "Optional"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Map",
       "field": "name",
       "type": "String",
       "arity": "Required"
@@ -426,7 +852,14 @@
     {
       "tag": "CreateField",
       "model": "Map",
-      "field": "private",
+      "field": "description",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Map",
+      "field": "published",
       "type": "Boolean",
       "arity": "Optional"
     },
@@ -436,7 +869,7 @@
         "path": {
           "tag": "Field",
           "model": "Map",
-          "field": "private"
+          "field": "published"
         },
         "directive": "default"
       }
@@ -448,7 +881,7 @@
         "path": {
           "tag": "Field",
           "model": "Map",
-          "field": "private"
+          "field": "published"
         },
         "directive": "default"
       },
@@ -476,7 +909,7 @@
     {
       "tag": "CreateField",
       "model": "Map",
-      "field": "wordSet",
+      "field": "wordset",
       "type": "String",
       "arity": "Required"
     },
@@ -490,7 +923,7 @@
     {
       "tag": "CreateField",
       "model": "Map",
-      "field": "owner",
+      "field": "creator",
       "type": "Account",
       "arity": "Optional"
     },
@@ -500,7 +933,7 @@
         "path": {
           "tag": "Field",
           "model": "Map",
-          "field": "owner"
+          "field": "creator"
         },
         "directive": "relation"
       }
@@ -512,12 +945,12 @@
         "path": {
           "tag": "Field",
           "model": "Map",
-          "field": "owner"
+          "field": "creator"
         },
         "directive": "relation"
       },
       "argument": "fields",
-      "value": "[ownerId]"
+      "value": "[creatorId]"
     },
     {
       "tag": "CreateArgument",
@@ -526,7 +959,7 @@
         "path": {
           "tag": "Field",
           "model": "Map",
-          "field": "owner"
+          "field": "creator"
         },
         "directive": "relation"
       },
@@ -536,87 +969,9 @@
     {
       "tag": "CreateField",
       "model": "Map",
-      "field": "ownerId",
+      "field": "creatorId",
       "type": "String",
       "arity": "Optional"
-    },
-    {
-      "tag": "DeleteModel",
-      "model": "Test"
-    },
-    {
-      "tag": "DeleteModel",
-      "model": "Trial"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Account",
-      "field": "digits",
-      "type": "Int",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Account",
-      "field": "rank",
-      "type": "Rank",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Account",
-      "field": "history",
-      "type": "Result",
-      "arity": "List"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Account",
-      "field": "maps",
-      "type": "Map",
-      "arity": "List"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Account",
-      "field": "discordLinked",
-      "type": "Boolean",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Account",
-          "field": "discordLinked"
-        },
-        "directive": "default"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Account",
-          "field": "discordLinked"
-        },
-        "directive": "default"
-      },
-      "argument": "",
-      "value": "false"
-    },
-    {
-      "tag": "DeleteField",
-      "model": "Account",
-      "field": "tests"
-    },
-    {
-      "tag": "DeleteField",
-      "model": "Account",
-      "field": "trials"
     }
   ]
 }

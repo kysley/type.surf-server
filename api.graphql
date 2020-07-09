@@ -5,10 +5,23 @@
 type Account {
   color: String
   confirmed: Boolean!
+  createdAt: DateTime!
+  digits: Int!
   email: String!
+  history(after: ResultWhereUniqueInput, before: ResultWhereUniqueInput, first: Int, last: Int, orderBy: AccountHistoryOrderByInput): [Result!]!
   id: String!
   lastSeen: DateTime!
+  maps(after: MapWhereUniqueInput, before: MapWhereUniqueInput, first: Int, last: Int): [Map!]!
+  rank: Rank!
+  role: Role!
+  updatedAt: DateTime!
   username: String!
+}
+
+input AccountHistoryOrderByInput {
+  createdAt: OrderByArg
+  mode: OrderByArg
+  wpm: OrderByArg
 }
 
 type AuthPayload {
@@ -19,16 +32,119 @@ type AuthPayload {
 """Use JavaScript Date object for date/time fields."""
 scalar DateTime
 
+enum Difficulty {
+  EASY
+  HARD
+  MEDIUM
+  NORMAL
+}
+
 """
 The `JSON` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar Json
 
+type Map {
+  createdAt: DateTime!
+  creator: Account
+  custom: Boolean
+  description: String
+  difficulty: Difficulty
+  id: String!
+  mode: Mode!
+  mods: [Mods!]!
+  name: String!
+  published: Boolean
+  updatedAt: DateTime!
+  wordset: String!
+}
+
+input MapInput {
+  description: String
+  mods: [Mods!]
+  name: String!
+  wordSet: String!
+}
+
+input MapWhereUniqueInput {
+  id: String
+}
+
+enum Mode {
+  Classic
+  Race
+  Takedown
+  TimeAttack
+}
+
+enum Mods {
+  Perfectionist
+  Rush
+}
+
 type Mutation {
   createAccount(email: String!, password: String!, username: String!): AuthPayload!
+  createMap(data: MapInput!): Map
+  createResult(data: ResultInput!, mapId: ID): Result
   login(password: String!, username: String!): AuthPayload
+  updateMap(data: MapInput!, id: ID!): Map
+}
+
+enum OrderByArg {
+  asc
+  desc
 }
 
 type Query {
+  map(id: ID!): Map
   me: Account
+  wordset(length: Int = 250): String
+}
+
+enum Rank {
+  Beginner
+  Competent
+  Expert
+  Master
+  Novice
+  Proficient
+}
+
+type Result {
+  account: Account!
+  correct: Int!
+  corrections: Int!
+  cpm: Int!
+  createdAt: DateTime!
+  id: String!
+  incorrect: Int!
+  map: Map
+  mode: Mode!
+  mods: [Mods!]!
+  rawCpm: Int!
+  wordIndex: Int!
+  wpm: Int!
+}
+
+input ResultInput {
+  correct: Int!
+  corrections: Int!
+  cpm: Int!
+  incorrect: Int!
+  mode: Mode!
+  mods: [Mods!]
+  rawCpm: Int!
+  wordIndex: Int!
+  wpm: Int!
+}
+
+input ResultWhereUniqueInput {
+  id: String
+}
+
+enum Role {
+  ADMIN
+  BETA
+  PRO
+  USER
 }
