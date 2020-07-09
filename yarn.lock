@@ -99,6 +99,14 @@
     iterall "^1.2.2"
     tslib "^1.9.3"
 
+"@nexus/schema@^0.15.0-next.1":
+  version "0.15.0-next.1"
+  resolved "https://registry.yarnpkg.com/@nexus/schema/-/schema-0.15.0-next.1.tgz#39def5322a6cc821914a9f2dee40e1333257e9f8"
+  integrity sha512-PBml7hY5DgqTEEEk9jwczUvBcyMtX9HKR8qfbU1tc+kZ+8uRodnSOatMqN6Haz6QuZhkZBLw4gh2gnpOUYWjPw==
+  dependencies:
+    iterall "^1.2.2"
+    tslib "^1.9.3"
+
 "@nodelib/fs.scandir@2.1.3":
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.3.tgz#3a582bdb53804c6ba6d146579c46e52130cf4a3b"
@@ -628,10 +636,10 @@
   dependencies:
     tslib "^1.9.3"
 
-"@zeit/node-file-trace@^0.6.0":
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/@zeit/node-file-trace/-/node-file-trace-0.6.2.tgz#0413b66906a1be6683987f757444815d9e1377ad"
-  integrity sha512-pm5FKTZG+I5kPbg4/dn95pqQ+5J2d4w4jtH0zxIYwmfdQaUfSCQbcnL45tWFM3HVzkUmOYxMScbpDzCxX5T+lg==
+"@zeit/node-file-trace@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@zeit/node-file-trace/-/node-file-trace-0.7.0.tgz#c63f2b5d8687e6a6cbd563245d3883ccaa71f81e"
+  integrity sha512-wVdNCwbW9ax6CXL9vTrociSePyklyjcjxviXZrlqQdpqq8plx4Pe7ulXSu3WExHnKl8Gs0HqabB1Tgxi/spMuA==
   dependencies:
     acorn "^7.1.1"
     acorn-class-fields "^0.3.2"
@@ -1747,7 +1755,7 @@ fast-deep-equal@^3.1.1:
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
 
-fast-glob@^3.1.1:
+fast-glob@^3.1.1, fast-glob@^3.2.4:
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.2.4.tgz#d20aefbf99579383e7f3cc66529158c9b98554d3"
   integrity sha512-kr/Oo6PX51265qeuCYsyGypiO5uJFgBS0jksyG7FUeCyQzNwYnzrNIMR1NXfkZXsMYXYLRAHgISHBz8gQcxKHQ==
@@ -2837,17 +2845,17 @@ nexus-plugin-prisma@^0.16.1:
     prismjs "^1.20.0"
     stacktrace-parser "^0.1.10"
 
-nexus@^0.25.0:
-  version "0.25.0"
-  resolved "https://registry.yarnpkg.com/nexus/-/nexus-0.25.0.tgz#e1824d31c837541aff4899cf43cd088189606e2d"
-  integrity sha512-ZA4EW/BS8buSvHlPiUrnXBk4GAuY08EiKnt3MBUB2mxDlt4bYH2HNJw5TB6qZMKeFwjhHeGenvxwj/o9Ijg2PQ==
+nexus@^0.26.0-next.1:
+  version "0.26.0-next.1"
+  resolved "https://registry.yarnpkg.com/nexus/-/nexus-0.26.0-next.1.tgz#2f44e7c2f05ad66d2af03c232e94ffb088083738"
+  integrity sha512-k/Ri5WANwZoh+fLDAed60Ar/Pw+olXWp/kZtf219qjsdluv7d20bil+39LYoeOn72PxM5H/8O2AAqzgeKGkMZQ==
   dependencies:
     "@nexus/logger" "^0.2.0"
-    "@nexus/schema" "^0.14.0"
+    "@nexus/schema" "^0.15.0-next.1"
     "@types/express" "^4.17.2"
     "@types/node-fetch" "^2.5.5"
     "@types/prompts" "^2.0.3"
-    "@zeit/node-file-trace" "^0.6.0"
+    "@zeit/node-file-trace" "^0.7.0"
     anymatch "^3.1.1"
     arg "^4.1.3"
     chalk "^4.0.0"
@@ -2857,6 +2865,7 @@ nexus@^0.25.0:
     cross-fetch "^3.0.4"
     dotenv "^8.2.0"
     express "^4.17.1"
+    fast-glob "^3.2.4"
     fp-ts "^2.5.4"
     fs-jetpack "^2.4.0"
     get-port "^5.1.0"
@@ -2872,11 +2881,12 @@ nexus@^0.25.0:
     rxjs "^6.5.4"
     simple-git "^2.0.0"
     slash "^3.0.0"
+    source-map-support "^0.5.19"
     strip-ansi "^6.0.0"
     ts-morph "^7.1.0"
-    ts-node "^8.10.1"
+    ts-node "^8.10.2"
     tslib "^2.0.0"
-    type-fest "^0.15.0"
+    type-fest "^0.16.0"
     typescript "3.9.x"
 
 node-addon-api@^3.0.0:
@@ -3670,7 +3680,7 @@ slice-ansi@^3.0.0:
     astral-regex "^2.0.0"
     is-fullwidth-code-point "^3.0.0"
 
-source-map-support@^0.5.12, source-map-support@^0.5.17:
+source-map-support@^0.5.12, source-map-support@^0.5.17, source-map-support@^0.5.19:
   version "0.5.19"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.19.tgz#a98b62f86dcaf4f67399648c085291ab9e8fed61"
   integrity sha512-Wonm7zOCIJzBGQdB+thsPar0kYuCIzYvxZwlBa87yi/Mdjv7Tip2cyVbLj5o0cFPN4EVkuTwb3GDDyUx2DGnGw==
@@ -4051,7 +4061,7 @@ ts-node-dev@1.0.0-pre.49:
     ts-node "^8.10.2"
     tsconfig "^7.0.0"
 
-ts-node@^8.10.1, ts-node@^8.10.2:
+ts-node@^8.10.2:
   version "8.10.2"
   resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-8.10.2.tgz#eee03764633b1234ddd37f8db9ec10b75ec7fb8d"
   integrity sha512-ISJJGgkIpDdBhWVu3jufsWpK3Rzo7bdiIXJjQc0ynKxVOVcg2oIrf2H2cejminGrptVc6q6/uynAHNCuWGbpVA==
@@ -4092,10 +4102,10 @@ type-fest@^0.12.0:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.12.0.tgz#f57a27ab81c68d136a51fd71467eff94157fa1ee"
   integrity sha512-53RyidyjvkGpnWPMF9bQgFtWp+Sl8O2Rp13VavmJgfAP9WWG6q6TkrKU8iyJdnwnfgHI6k2hTlgqH4aSdjoTbg==
 
-type-fest@^0.15.0:
-  version "0.15.1"
-  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.15.1.tgz#d2c4e73d3e4a53cf1a906396dd460a1c5178ca00"
-  integrity sha512-n+UXrN8i5ioo7kqT/nF8xsEzLaqFra7k32SEsSPwvXVGyAcRgV/FUQN/sgfptJTR1oRmmq7z4IXMFSM7im7C9A==
+type-fest@^0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.16.0.tgz#3240b891a78b0deae910dbeb86553e552a148860"
+  integrity sha512-eaBzG6MxNzEn9kiwvtre90cXaNLkmadMWa1zQMs3XORCXNbsH/OewwbxC5ia9dCxIxnTAsSxXJaa/p5y8DlvJg==
 
 type-fest@^0.6.0:
   version "0.6.0"
