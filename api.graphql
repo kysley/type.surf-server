@@ -87,7 +87,9 @@ type Mutation {
   createMap(data: MapInput!): Map
   createResult(data: ResultInput!, mapId: ID): Result
   login(password: String!, username: String!): AuthPayload
+  loginWithDiscord: AuthPayload
   updateMap(data: MapInput!, id: ID!): Map
+  wordset(length: Int = 250): String
 }
 
 enum OrderByArg {
@@ -98,7 +100,6 @@ enum OrderByArg {
 type Query {
   map(id: ID!): Map
   me: Account
-  wordset(length: Int = 250): String
 }
 
 enum Rank {

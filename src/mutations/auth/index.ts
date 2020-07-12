@@ -89,3 +89,12 @@ schema.extendType({
     })
   },
 })
+
+schema.extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.field('loginWithDiscord', {
+      type: 'AuthPayload',
+    })
+  },
+})
