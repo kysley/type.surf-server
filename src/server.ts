@@ -1,16 +1,44 @@
-import * as dotenv from 'dotenv'
+import dotenv from 'dotenv'
+import { ApolloServer } from 'apollo-server-express'
+import createExpress from 'express'
+import http from 'http'
+import socketIO from 'socket.io'
+
 dotenv.config()
-import { prisma } from 'nexus-plugin-prisma'
-import { server, use } from 'nexus'
-import * as cors from 'cors'
 
-import './socket'
+import { schema } from './schema'
+import { prisma } from './context'
+import { getCurrentUser } from './auth'
 
-import { prisma as pc } from './context'
+// import { socketHttpServer } from './socket'
 
-use(prisma({ client: { instance: pc }, features: { crud: true } }))
-server.express.use(
-  cors({
-    origin: ['http://localhost:8080'],
-  }),
-)
+const apollo = new ApolloServer({
+  schema,
+  context: ({ req }) => ({ db: prisma, user: getCurrentUser(req) }),
+})
+
+export const express = createExpress()
+
+// application.use(cors())
+
+export const socketHttpServer = http.createServer(express).listen(8086)
+
+export const io = socketIO(socketHttpServer)
+
+apollo.applyMiddleware({
+  app: express,
+  cors: { origin: ['http://localhost:8080'], credentials: true },
+  path: '/graphql',
+})
+
+express.listen(8081, () => {
+  console.log(`🚀 GraphQL service ready at http://localhost:8081/graphql`)
+})
+
+// express.listen(4000, () => {
+//   console.log(`🚀 GraphQL service ready at http://localhost:4000/graphql`)
+// })
+
+// socketHttpServer.listen(4005, () => {
+//   console.log(`🚀 Socket connect to http://localhost:3001`)
+// })

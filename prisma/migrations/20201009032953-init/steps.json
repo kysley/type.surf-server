@@ -3,16 +3,6 @@
   "steps": [
     {
       "tag": "CreateEnum",
-      "enum": "Difficulty",
-      "values": [
-        "EASY",
-        "NORMAL",
-        "MEDIUM",
-        "HARD"
-      ]
-    },
-    {
-      "tag": "CreateEnum",
       "enum": "Role",
       "values": [
         "USER",
@@ -37,10 +27,10 @@
       "tag": "CreateEnum",
       "enum": "Mode",
       "values": [
-        "Classic",
-        "Race",
-        "TimeAttack",
-        "Takedown"
+        "Words",
+        "Time",
+        "Takedown",
+        "TimeAttack"
       ]
     },
     {
@@ -76,95 +66,6 @@
     {
       "tag": "CreateModel",
       "model": "Account"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Account",
-      "field": "color",
-      "type": "String",
-      "arity": "Optional"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Account",
-      "field": "confirmed",
-      "type": "Boolean",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Account",
-          "field": "confirmed"
-        },
-        "directive": "default"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Account",
-          "field": "confirmed"
-        },
-        "directive": "default"
-      },
-      "argument": "",
-      "value": "false"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Account",
-      "field": "createdAt",
-      "type": "DateTime",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Account",
-          "field": "createdAt"
-        },
-        "directive": "default"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Account",
-          "field": "createdAt"
-        },
-        "directive": "default"
-      },
-      "argument": "",
-      "value": "now()"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Account",
-      "field": "email",
-      "type": "String",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Account",
-          "field": "email"
-        },
-        "directive": "unique"
-      }
     },
     {
       "tag": "CreateField",
@@ -208,6 +109,124 @@
       },
       "argument": "",
       "value": "cuid()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "username",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "username"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "confirmed",
+      "type": "Boolean",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "confirmed"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "confirmed"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "false"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Account",
+      "field": "email",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "email"
+        },
+        "directive": "unique"
+      }
     },
     {
       "tag": "CreateField",
@@ -283,61 +302,7 @@
     {
       "tag": "CreateField",
       "model": "Account",
-      "field": "updatedAt",
-      "type": "DateTime",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Account",
-          "field": "updatedAt"
-        },
-        "directive": "updatedAt"
-      }
-    },
-    {
-      "tag": "CreateField",
-      "model": "Account",
-      "field": "username",
-      "type": "String",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Account",
-          "field": "username"
-        },
-        "directive": "unique"
-      }
-    },
-    {
-      "tag": "CreateField",
-      "model": "Account",
-      "field": "usernameLowercase",
-      "type": "String",
-      "arity": "Optional"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Account",
-          "field": "usernameLowercase"
-        },
-        "directive": "unique"
-      }
-    },
-    {
-      "tag": "CreateField",
-      "model": "Account",
-      "field": "digits",
+      "field": "tag",
       "type": "Int",
       "arity": "Required"
     },
@@ -347,6 +312,31 @@
       "field": "rank",
       "type": "Rank",
       "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "rank"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Account",
+          "field": "rank"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "Beginner"
     },
     {
       "tag": "CreateField",
@@ -401,59 +391,6 @@
     {
       "tag": "CreateField",
       "model": "Result",
-      "field": "correct",
-      "type": "Int",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Result",
-      "field": "corrections",
-      "type": "Int",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Result",
-      "field": "cpm",
-      "type": "Int",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Result",
-      "field": "createdAt",
-      "type": "DateTime",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Result",
-          "field": "createdAt"
-        },
-        "directive": "default"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Result",
-          "field": "createdAt"
-        },
-        "directive": "default"
-      },
-      "argument": "",
-      "value": "now()"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Result",
       "field": "id",
       "type": "String",
       "arity": "Required"
@@ -497,7 +434,71 @@
     {
       "tag": "CreateField",
       "model": "Result",
-      "field": "incorrect",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Result",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Result",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Result",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Result",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Result",
+      "field": "correct",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Result",
+      "field": "corrections",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Result",
+      "field": "cpm",
       "type": "Int",
       "arity": "Required"
     },
@@ -507,6 +508,126 @@
       "field": "rawCpm",
       "type": "Int",
       "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Result",
+      "field": "wpm",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Result",
+      "field": "rawWpm",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Result",
+      "field": "incorrect",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Result",
+      "field": "wordIndex",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Result",
+      "field": "letterIndex",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Result",
+      "field": "history",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Result",
+      "field": "punctuated",
+      "type": "Boolean",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Result",
+          "field": "punctuated"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Result",
+          "field": "punctuated"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "false"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Result",
+      "field": "state",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Result",
+      "field": "seed",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Result",
+      "field": "isArcade",
+      "type": "Boolean",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Result",
+          "field": "isArcade"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Result",
+          "field": "isArcade"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "false"
     },
     {
       "tag": "CreateField",
@@ -538,20 +659,13 @@
         "directive": "default"
       },
       "argument": "",
-      "value": "Classic"
+      "value": "Time"
     },
     {
       "tag": "CreateField",
       "model": "Result",
-      "field": "mods",
-      "type": "Mods",
-      "arity": "List"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Result",
-      "field": "updatedAt",
-      "type": "DateTime",
+      "field": "slug",
+      "type": "String",
       "arity": "Required"
     },
     {
@@ -560,24 +674,31 @@
         "path": {
           "tag": "Field",
           "model": "Result",
-          "field": "updatedAt"
+          "field": "slug"
         },
-        "directive": "updatedAt"
+        "directive": "default"
       }
     },
     {
-      "tag": "CreateField",
-      "model": "Result",
-      "field": "wordIndex",
-      "type": "Int",
-      "arity": "Required"
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Result",
+          "field": "slug"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "\"60\""
     },
     {
       "tag": "CreateField",
       "model": "Result",
-      "field": "wpm",
-      "type": "Int",
-      "arity": "Required"
+      "field": "mods",
+      "type": "Mods",
+      "arity": "List"
     },
     {
       "tag": "CreateField",
@@ -692,6 +813,49 @@
     {
       "tag": "CreateField",
       "model": "Map",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Map",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Map",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Map",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Map",
       "field": "createdAt",
       "type": "DateTime",
       "arity": "Required"
@@ -756,22 +920,8 @@
     {
       "tag": "CreateField",
       "model": "Map",
-      "field": "difficulty",
-      "type": "Difficulty",
-      "arity": "Optional"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Map",
-      "field": "mods",
-      "type": "Mods",
-      "arity": "List"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Map",
-      "field": "mode",
-      "type": "Mode",
+      "field": "updatedAt",
+      "type": "DateTime",
       "arity": "Required"
     },
     {
@@ -780,67 +930,10 @@
         "path": {
           "tag": "Field",
           "model": "Map",
-          "field": "mode"
+          "field": "updatedAt"
         },
-        "directive": "default"
+        "directive": "updatedAt"
       }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Map",
-          "field": "mode"
-        },
-        "directive": "default"
-      },
-      "argument": "",
-      "value": "Classic"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Map",
-      "field": "id",
-      "type": "String",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Map",
-          "field": "id"
-        },
-        "directive": "id"
-      }
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Map",
-          "field": "id"
-        },
-        "directive": "default"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Map",
-          "field": "id"
-        },
-        "directive": "default"
-      },
-      "argument": "",
-      "value": "cuid()"
     },
     {
       "tag": "CreateField",
@@ -848,13 +941,6 @@
       "field": "name",
       "type": "String",
       "arity": "Required"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Map",
-      "field": "description",
-      "type": "String",
-      "arity": "Optional"
     },
     {
       "tag": "CreateField",
@@ -887,24 +973,6 @@
       },
       "argument": "",
       "value": "false"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Map",
-      "field": "updatedAt",
-      "type": "DateTime",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Map",
-          "field": "updatedAt"
-        },
-        "directive": "updatedAt"
-      }
     },
     {
       "tag": "CreateField",

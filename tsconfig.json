@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es2016",
+    "esModuleInterop": true,
+    "target": "ES2015",
     "module": "commonjs",
+    "moduleResolution": "node",
     "lib": [
       "esnext"
     ],
@@ -9,11 +11,11 @@
     "rootDir": "src",
     "typeRoots": ["node_modules/@types", "types"],
     "noEmit": true,
-    "plugins": [
-      {
-        "name": "nexus/typescript-language-service"
-      }
-    ]
+    // "plugins": [
+    //   {
+    //     "name": "nexus/typescript-language-service"
+    //   }
+    // ]
   },
   "include": [
     "src",

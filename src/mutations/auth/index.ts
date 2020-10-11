@@ -1,6 +1,6 @@
 import { schema } from 'nexus'
-import * as jwt from 'jsonwebtoken'
-import * as bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
 
 schema.mutationType({
   definition(t) {

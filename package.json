@@ -3,35 +3,45 @@
   "license": "UNLICENSED",
   "version": "1.0.0",
   "dependencies": {
-    "@prisma/cli": "2.4.1",
-    "@prisma/client": "2.4.1",
+    "@nexus/schema": "^0.16.0",
+    "@prisma/cli": "2.8.1",
+    "@prisma/client": "2.8.1",
     "@typvp/gen": "^0.2.3",
-    "apollo-server-express": "^2.16.1",
+    "apollo-server-express": "^2.18.2",
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "graphql": "^14.6.0",
+    "express": "^4.17.1",
+    "graphql": "^14.7.0",
     "graphql-middleware": "^4.0.2",
+    "graphql-scalars": "^1.4.0",
     "graphql-shield": "^7.3.3",
     "ioredis": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
-    "nexus": "^0.26.1",
-    "nexus-plugin-prisma": "^0.17.0"
+    "nexus-plugin-prisma": "^0.21.0",
+    "socket.io": "^2.3.0",
+    "wordkit": "^0.1.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
+    "@types/express": "^4.17.8",
     "@types/ioredis": "^4.17.2",
     "@types/jsonwebtoken": "^8.5.0",
-    "create-nexus-type": "^1.2.3",
-    "prettier": "^2.0.5",
-    "ts-node-dev": "1.0.0-pre.49",
-    "typescript": "^3.9.5"
+    "@types/socket.io": "^2.1.11",
+    "cross-env": "^7.0.2",
+    "prettier": "^2.1.2",
+    "ts-node-dev": "1.0.0-pre.63",
+    "typescript": "^4.0.3"
   },
   "scripts": {
+    "build": "yarn nexus:reflection:temp && tsc",
+    "nexus:reflect": "cross-env NODE_ENV=development ts-node --transpile-only ./src/schema",
+    "build:reflection:temp": "cross-env NEXUS_SHOULD_EXIT_AFTER_REFLECTION=true ts-node ./src/schema",
+    "dev:migrate": "prisma migrate save --experimental -c && prisma migrate up --experimental -c",
+    "dev": "ts-node-dev --transpile-only ./src/server.ts",
+    "dev:typecheck": "tsc --noEmit --watch",
     "format": "npx prettier --write './**/*.{ts,md}'",
-    "dev": "nexus dev",
-    "build": "nexus build",
-    "start": "node .nexus/build/api"
+    "start": "cross-env NODE_ENV=production node .nexus/build"
   },
   "prettier": {
     "semi": false,
