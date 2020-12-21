@@ -5,7 +5,7 @@ import {
   inputObjectType,
   enumType,
   scalarType,
-} from '@nexus/schema'
+} from 'nexus'
 
 export * from './Query'
 export * from './Mutation'

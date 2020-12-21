@@ -1,4 +1,4 @@
-import { idArg, queryField, queryType } from '@nexus/schema'
+import { idArg, queryField, queryType } from 'nexus'
 
 export const Me = queryField('me', {
   type: 'Account',

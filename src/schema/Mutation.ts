@@ -1,24 +1,16 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import {
-  booleanArg,
-  idArg,
-  intArg,
-  mutationField,
-  stringArg,
-  arg,
-} from '@nexus/schema'
+import { booleanArg, idArg, intArg, mutationField, stringArg, arg } from 'nexus'
 import { seed, grabWords } from 'wordkit'
 
 import { redis } from '../redis'
 
 export const CreateAccount = mutationField('createAccount', {
   type: 'AuthPayload',
-  nullable: false,
   args: {
-    email: stringArg({ nullable: false }),
-    password: stringArg({ nullable: false }),
-    username: stringArg({ nullable: false }),
+    email: stringArg(),
+    password: stringArg(),
+    username: stringArg(),
   },
   resolve: async (parent, args, ctx) => {
     const $exists = await ctx.db.account.findFirst({
@@ -70,8 +62,8 @@ export const CreateAccount = mutationField('createAccount', {
 export const Login = mutationField('login', {
   type: 'AuthPayload',
   args: {
-    username: stringArg({ nullable: false }),
-    password: stringArg({ nullable: false }),
+    username: stringArg(),
+    password: stringArg(),
   },
   resolve: async (parent, args, ctx) => {
     const $account = await ctx.db.account.findFirst({
@@ -102,7 +94,7 @@ export const Login = mutationField('login', {
 export const Wordset = mutationField('wordset', {
   type: 'String',
   args: {
-    count: intArg({ nullable: false }),
+    count: intArg(),
     seed: stringArg(),
     punctuate: booleanArg({ default: false }),
   },
