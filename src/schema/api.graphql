@@ -27,11 +27,6 @@ type AuthPayload {
   token: String
 }
 
-"""
-A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the
-`date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO
-8601 standard for representation of dates and times using the Gregorian calendar.
-"""
 scalar DateTime
 
 enum Difficulty {
@@ -69,14 +64,14 @@ enum Mods {
 }
 
 type Mutation {
-  createAccount(email: String!, password: String!, username: String!): AuthPayload!
-  createResult(data: ResultInput!, mapId: ID): Boolean
-  login(password: String!, username: String!): AuthPayload
-  wordset(count: Int!, punctuate: Boolean = false, seed: String): String
+  createAccount(email: String, password: String, username: String): AuthPayload
+  createResult(data: ResultInput, mapId: ID): Boolean
+  login(password: String, username: String): AuthPayload
+  wordset(count: Int, punctuate: Boolean = false, seed: String): String
 }
 
 type Query {
-  mapById(id: ID!): Map
+  mapById(id: ID): Map
   me: Account
 }
 
@@ -106,23 +101,23 @@ type Result {
 }
 
 input ResultInput {
-  correct: Int!
-  corrections: Int!
-  cpm: Int!
-  history: Int!
-  incorrect: Int!
-  letterIndex: Int!
-  mapId: ID!
-  mode: Mode!
-  mods: [Mods]!
-  punctuated: Boolean!
-  rawCpm: Int!
-  rawWpm: Int!
+  correct: Int
+  corrections: Int
+  cpm: Int
+  history: Int
+  incorrect: Int
+  letterIndex: Int
+  mapId: ID
+  mode: Mode
+  mods: [Mods]
+  punctuated: Boolean
+  rawCpm: Int
+  rawWpm: Int
   seed: String
-  slug: String!
-  state: String!
-  wordIndex: Int!
-  wpm: Int!
+  slug: String
+  state: String
+  wordIndex: Int
+  wpm: Int
 }
 
 input ResultWhereUniqueInput {

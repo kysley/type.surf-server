@@ -1,22 +1,53 @@
-import http from 'http'
-import socketIO from 'socket.io'
+import { Socket } from 'socket.io'
+import lru from 'tiny-lru'
+import { v4 as uuid } from 'uuid'
 
-import { express } from './server'
+import { BaseController, PlayerConnection } from './controllers'
+import { Standard } from './controllers/standard'
+import { chunk } from './helpers'
+import { app, io } from './server'
 
-export const socketHttpServer = http.createServer(express)
+const queue: string[] = []
+const rooms_global = lru<BaseController>()
+export const players_global = lru<PlayerConnection>()
 
-export const io = socketIO(socketHttpServer)
+function createRoom(room: BaseController) {
+  const roomController = new Standard({ ...room })
+  rooms_global.set(room.id, roomController)
+}
 
-// socketHttpServer.listen(3001, async () => {
-//   console.log('Sawkets Listening on 3001')
-// })
+io.on('connection', (socket: Socket) => {
+  console.log('incoming connection..')
+  socket.on('client.whois', (userId: string) => {
+    players_global.set(socket.id, { id: userId, username: 'Test' })
+  })
+})
 
-// import { server } from 'nexus'
+app.post('/queue', (req) => {
+  // socketid, userId?
+  console.log(req.params)
+  // players.set(req.params.socketId, { id: req.params?.userId, username: 'Test' })
+  queue.push(req.params.socketId)
+})
 
-// export const socketServer = http.createServer(server.raw.http.).listen(4005, () => {
-//   console.log('go to http://localhost:3000')
-// })
+// simple matchmaking
+setInterval(() => {
+  // players are in the queue
+  if (queue.length) {
+    const chunks = chunk(queue, 4) // room size
 
-// export const socketServer = server.raw.http
-
-// export const io = new socketServ(3001)
+    chunks.forEach((chunk) => {
+      // const playerArray = chunk.map((socketId) => players_global.get(socketId))
+      const roomId = uuid()
+      createRoom({
+        invitesEnabled: true,
+        state: 'LOBBY',
+        id: roomId,
+        name: '',
+        // players: playerArray,
+      } as BaseController)
+      const controller = rooms_global.get(roomId)!
+      chunk.forEach((socketId) => controller.connectPlayer(socketId))
+    })
+  }
+}, 5000)

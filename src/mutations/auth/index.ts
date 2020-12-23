@@ -1,16 +1,16 @@
-import { schema } from 'nexus'
+import { mutationField, mutationType, stringArg } from 'nexus'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 
-schema.mutationType({
+// export const CreateAccount
+mutationType({
   definition(t) {
     t.field('createAccount', {
       type: 'AuthPayload',
-      nullable: false,
       args: {
-        email: schema.stringArg({ nullable: false }),
-        password: schema.stringArg({ nullable: false }),
-        username: schema.stringArg({ nullable: false }),
+        email: stringArg(),
+        password: stringArg(),
+        username: stringArg(),
       },
       resolve: async (parent, args, ctx) => {
         const $exists = await ctx.db.account.findMany({
@@ -55,46 +55,41 @@ schema.mutationType({
   },
 })
 
-schema.extendType({
-  type: 'Mutation',
-  definition(t) {
-    t.field('login', {
-      type: 'AuthPayload',
-      args: {
-        username: schema.stringArg({ nullable: false }),
-        password: schema.stringArg({ nullable: false }),
-      },
-      resolve: async (parent, args, ctx) => {
-        const $account = await ctx.db.account.findOne({
-          where: { usernameLowercase: args.username.toLowerCase() },
-        })
-
-        if (!$account) {
-          throw new Error(
-            `Cannot find account associated with the username: ${args.username}`,
-          )
-        }
-
-        const $valid = await bcrypt.compare(args.password, $account.password)
-
-        if (!$valid) {
-          throw new Error('Invalid Username or Password')
-        }
-
-        return {
-          token: jwt.sign({ id: $account.id }, process.env.APP_SECRET!),
-          account: $account,
-        }
-      },
+export const Login = mutationField('login', {
+  type: 'AuthPayload',
+  args: {
+    username: stringArg(),
+    password: stringArg(),
+  },
+  resolve: async (parent, args, ctx) => {
+    const $account = await ctx.db.account.findOne({
+      where: { usernameLowercase: args.username.toLowerCase() },
     })
+
+    if (!$account) {
+      throw new Error(
+        `Cannot find account associated with the username: ${args.username}`,
+      )
+    }
+
+    const $valid = await bcrypt.compare(args.password, $account.password)
+
+    if (!$valid) {
+      throw new Error('Invalid Username or Password')
+    }
+
+    return {
+      token: jwt.sign({ id: $account.id }, process.env.APP_SECRET!),
+      account: $account,
+    }
   },
 })
 
-schema.extendType({
-  type: 'Mutation',
-  definition(t) {
-    t.field('loginWithDiscord', {
-      type: 'AuthPayload',
-    })
-  },
-})
+// schema.extendType({
+//   type: 'Mutation',
+//   definition(t) {
+//     t.field('loginWithDiscord', {
+//       type: 'AuthPayload',
+//     })
+//   },
+// })

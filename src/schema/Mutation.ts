@@ -114,8 +114,8 @@ export const Wordset = mutationField('wordset', {
 export const CreateResult = mutationField('createResult', {
   type: 'Boolean',
   args: {
-    mapId: idArg({ nullable: true }),
-    data: arg({ type: 'ResultInput', nullable: false }),
+    mapId: idArg(),
+    data: arg({ type: 'ResultInput' }),
   },
   resolve: async (parent, args, ctx) => {
     const id = await ctx.user

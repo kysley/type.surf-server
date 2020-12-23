@@ -6,7 +6,7 @@ schema.extendType({
     t.field('map', {
       type: 'Map',
       args: {
-        id: schema.idArg({ nullable: false }),
+        id: schema.idArg(),
       },
       resolve: async (parent, args, ctx) => {
         return ctx.db.map.findOne({ where: { id: args.id } })

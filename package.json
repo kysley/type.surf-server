@@ -18,7 +18,10 @@
     "ioredis": "^4.19.4",
     "jsonwebtoken": "^8.5.1",
     "nexus": "^1.0.0",
+    "nexus-plugin-prisma": "^0.27.0",
     "socket.io": "^3.0.4",
+    "tiny-lru": "^7.0.6",
+    "uuid": "^8.3.2",
     "wordkit": "^0.1.2"
   },
   "devDependencies": {
@@ -27,6 +30,7 @@
     "@types/ioredis": "^4.17.9",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/socket.io": "^2.1.12",
+    "@types/uuid": "^8.3.0",
     "cross-env": "^7.0.3",
     "prettier": "^2.2.1",
     "ts-node-dev": "1.1.1",
@@ -35,7 +39,7 @@
   "scripts": {
     "build": "yarn nexus:reflection:temp && tsc",
     "build:reflect": "cross-env NEXUS_SHOULD_EXIT_AFTER_REFLECTION=true ts-node --transpile-only ./src/schema",
-    "dev:migrate": "prisma migrate save --experimental -c && prisma migrate up --experimental -c",
+    "dev:migrate": "prisma migrate dev --preview-feature",
     "dev": "ts-node-dev --transpile-only ./src/server.ts",
     "dev:typecheck": "tsc --noEmit --watch",
     "format": "npx prettier --write './**/*.{ts,md}'",

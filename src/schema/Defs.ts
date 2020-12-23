@@ -67,16 +67,16 @@ export const Map = objectType({
     t.model.createdAt()
     // t.field('creator', {
     //   type: Account,
-    //   nullable: true,
+    //   ,
     // })
     t.model.creator()
-    // t.boolean('custom', { nullable: true })
+    // t.boolean('custom', {  })
     t.model.custom()
     // t.string('id')
     t.model.id()
     // t.string('name')
     t.model.name()
-    // t.boolean('published', { nullable: true })
+    // t.boolean('published', {  })
     t.model.published()
     // t.field('updatedAt', { type: DateTime })
     t.model.updatedAt()
@@ -111,9 +111,8 @@ export const AuthPayload = objectType({
   definition(t) {
     t.field('account', {
       type: Account,
-      nullable: true,
     })
-    t.string('token', { nullable: true })
+    t.string('token', {})
   },
 })
 
@@ -127,23 +126,23 @@ export const AuthPayload = objectType({
 export const ResultInput = inputObjectType({
   name: 'ResultInput',
   definition(t) {
-    t.int('correct', { nullable: false })
-    t.int('corrections', { nullable: false })
-    t.int('cpm', { nullable: false })
-    t.int('rawCpm', { nullable: false })
-    t.int('wpm', { nullable: false })
-    t.int('rawWpm', { nullable: false })
-    t.int('incorrect', { nullable: false })
-    t.int('wordIndex', { nullable: false })
-    t.int('letterIndex', { nullable: false })
-    t.int('history', { nullable: false })
-    t.boolean('punctuated', { nullable: false })
-    t.string('state', { nullable: false })
+    t.int('correct')
+    t.int('corrections')
+    t.int('cpm')
+    t.int('rawCpm')
+    t.int('wpm')
+    t.int('rawWpm')
+    t.int('incorrect')
+    t.int('wordIndex')
+    t.int('letterIndex')
+    t.int('history')
+    t.boolean('punctuated')
+    t.string('state')
     t.string('seed')
-    t.field('mode', { type: 'Mode', nullable: false })
-    t.string('slug', { nullable: false })
-    t.list.field('mods', { type: 'Mods', nullable: false })
-    t.id('mapId', { nullable: false })
+    t.field('mode', { type: 'Mode' })
+    t.string('slug')
+    t.list.field('mods', { type: 'Mods' })
+    t.id('mapId')
   },
 })
 

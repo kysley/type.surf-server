@@ -8,7 +8,7 @@ schema.extendType({
     t.field('updateMap', {
       type: 'Map',
       args: {
-        id: schema.idArg({ nullable: false }),
+        id: schema.idArg(),
         data: schema.arg({ type: MapInput, nullable: false }),
       },
       resolve: async (parent, args, ctx) => {

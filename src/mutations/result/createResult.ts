@@ -16,15 +16,15 @@ import { schema } from 'nexus'
 export const ResultInput = schema.inputObjectType({
   name: 'ResultInput',
   definition(t) {
-    t.int('correct', { nullable: false })
-    t.int('corrections', { nullable: false })
-    t.int('cpm', { nullable: false })
-    t.int('incorrect', { nullable: false })
-    t.int('rawCpm', { nullable: false })
+    t.int('correct')
+    t.int('corrections')
+    t.int('cpm')
+    t.int('incorrect')
+    t.int('rawCpm')
     t.list.field('mods', { type: 'Mods' })
     t.field('mode', { type: 'Mode', nullable: false })
-    t.int('wordIndex', { nullable: false })
-    t.int('wpm', { nullable: false })
+    t.int('wordIndex')
+    t.int('wpm')
   },
 })
 

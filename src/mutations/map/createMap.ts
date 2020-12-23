@@ -3,13 +3,13 @@ import { schema } from 'nexus'
 export const MapInput = schema.inputObjectType({
   name: 'MapInput',
   definition(t) {
-    t.string('name', { nullable: false })
+    t.string('name')
     t.list.field('mods', {
       type: 'Mods',
     })
     // t.field('mode', { type: 'Mode', nullable: false })
     t.string('description')
-    t.string('wordSet', { nullable: false })
+    t.string('wordSet')
   },
 })
 

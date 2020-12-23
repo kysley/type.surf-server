@@ -1,4 +1,5 @@
-import { asNexusMethod, makeSchema } from 'nexus'
+import { makeSchema } from 'nexus'
+import { nexusPrisma } from 'nexus-plugin-prisma'
 import path from 'path'
 
 import * as types from './Defs'
@@ -12,20 +13,6 @@ export const schema = makeSchema({
     module: path.join(__dirname, '../context.ts'),
     export: 'Context',
   },
-  // typegenAutoConfig: {
-  //   sources: [
-  //     {
-  //       source: '.prisma/client',
-  //       alias: 'prisma',
-  //     },
-  //     {
-  //       source: require.resolve('../context.ts'),
-  //       alias: 'Context',
-  //     },
-  //   ],
-  //   contextType: 'Context.Context',
-  //   // : 'ContextModule.Context',
-  // },
   outputs: {
     typegen: path.join(
       __dirname,
@@ -36,4 +23,5 @@ export const schema = makeSchema({
   shouldExitAfterGenerateArtifacts: Boolean(
     process.env.NEXUS_SHOULD_EXIT_AFTER_REFLECTION,
   ),
+  plugins: [nexusPrisma()],
 })
