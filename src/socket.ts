@@ -30,6 +30,11 @@ app.post('/queue', (req) => {
   queue.push(req.params.socketId)
 })
 
+app.post('/join', (req) => {
+  console.log(req.params)
+  
+})
+
 // simple matchmaking
 setInterval(() => {
   // players are in the queue

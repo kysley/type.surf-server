@@ -1,13 +1,24 @@
+import { v4 as uuid } from 'uuid'
+
 import { sleep } from '../helpers'
 import { io } from '../server'
 import { players_global } from '../socket'
-import { BaseController } from './'
+// import { BaseController } from './'
 
 function makeRoomKey(id: string) {
   return `room.${id}`
 }
 
-export class Standard implements BaseController {
+interface BaseController {
+  id: string
+  invitesEnabled: boolean
+  name: string
+  state: 'LOBBY' | 'GAME'
+  players: any[]
+  key: string
+}
+
+export abstract class Standard implements BaseController {
   id
   invitesEnabled
   players
@@ -28,8 +39,6 @@ export class Standard implements BaseController {
     this.name = name
     this.state = state
     this.key = makeRoomKey(id)
-
-    // this.init()
   }
 
   // maybe hanle this inside of the queue, or wherever is creating the controller
@@ -39,6 +48,7 @@ export class Standard implements BaseController {
 
   broadcast(data: any) {
     io.to(this.key).emit('server.broadcast', data)
+    return 'hi'
   }
 
   request(type: string) {
@@ -76,15 +86,34 @@ export class Standard implements BaseController {
     // we will want to have a duration field for standard
     // probably a class method for more complex modes. They
     // all just extend BaseController anyways.
-    while (duration >= 0) {
+
+    let signal = true
+    // while (duration >= 0) {
+    //   this.request('state')
+    //   duration--
+    //   await sleep(1000)
+    // }
+    do {
       this.request('state')
-      duration--
+      signal = this.communicate()
       await sleep(1000)
-    }
+    } while (signal)
     this.end()
   }
 
   end() {
     this.broadcast({ stop: true })
+  }
+
+  abstract communicate(): boolean
+}
+
+class Race extends Standard {
+  constructor(race: BaseController = {}) {
+    super({})
+  }
+
+  communicate() {
+    return true
   }
 }
