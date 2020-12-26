@@ -16,9 +16,13 @@ interface BaseController {
   state: 'LOBBY' | 'GAME'
   players: any[]
   key: string
+
+  broadcast(data: any): void
+  request(type: 'STATE' | 'HEALTH'): void
+  connectPlayer(socketId: string): void
 }
 
-export abstract class Standard implements BaseController {
+export class Standard implements BaseController {
   id
   invitesEnabled
   players
