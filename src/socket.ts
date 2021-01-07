@@ -1,38 +1,61 @@
 import { Socket } from 'socket.io'
 import lru from 'tiny-lru'
-import { v4 as uuid } from 'uuid'
 
-import { BaseController, PlayerConnection } from './controllers'
-import { Standard } from './controllers/standard'
+import { BaseController, Race } from './controllers/standard'
 import { chunk } from './helpers'
-import { app, io } from './server'
+import { setPlayerData, removePlayerData } from './redis'
+import { io } from './server'
 
 const queue: string[] = []
 const rooms_global = lru<BaseController>()
-export const players_global = lru<PlayerConnection>()
 
-function createRoom(room: BaseController) {
-  const roomController = new Standard({ ...room })
-  rooms_global.set(room.id, roomController)
+export enum ROOM_TYPES {
+  'RACE',
 }
 
+export const ROOM_MAP = {
+  [ROOM_TYPES.RACE]: Race,
+}
+
+function roomFactory<T extends ROOM_TYPES>(
+  type: T,
+  constructor: ConstructorParameters<typeof ROOM_MAP[T]>[0],
+) {
+  const roomController = new ROOM_MAP[type](constructor)
+  rooms_global.set(roomController.id, roomController)
+  return roomController.id
+}
+
+rooms_global.set('123', new Race({ players: [] }))
+
 io.on('connection', (socket: Socket) => {
-  console.log('incoming connection..')
-  socket.on('client.whois', (userId: string) => {
-    players_global.set(socket.id, { id: userId, username: 'Test' })
+  let room: string
+  console.log(`incoming connection..${socket.id}`)
+  socket.emit('server.whois')
+  socket.on('client.whois', ({ userId, username }, callback) => {
+    callback({
+      status: 'ok!!!',
+    })
+    setPlayerData(socket.id, { id: userId, username })
+    console.log(userId, username)
   })
-})
+  socket.on('client.response.*', ({ room, state }) => {})
+  socket.on('client.queue', () => {
+    queue.push(socket.id)
+  })
+  socket.on('client.join', ({ roomId }) => {
+    if (rooms_global.has(roomId)) {
+      // try-catch this?
+      rooms_global.get(roomId)?.connectPlayer(socket.id)
+      room = roomId
+      console.log('joined' + roomId)
+    }
+  })
 
-app.post('/queue', (req) => {
-  // socketid, userId?
-  console.log(req.params)
-  // players.set(req.params.socketId, { id: req.params?.userId, username: 'Test' })
-  queue.push(req.params.socketId)
-})
-
-app.post('/join', (req) => {
-  console.log(req.params)
-  
+  socket.on('disconnect', () => {
+    removePlayerData(socket.id)
+    console.log(`lost connection...${socket.id}`)
+  })
 })
 
 // simple matchmaking
@@ -42,16 +65,13 @@ setInterval(() => {
     const chunks = chunk(queue, 4) // room size
 
     chunks.forEach((chunk) => {
-      // const playerArray = chunk.map((socketId) => players_global.get(socketId))
-      const roomId = uuid()
-      createRoom({
+      const id = roomFactory(0, {
         invitesEnabled: true,
         state: 'LOBBY',
-        id: roomId,
-        name: '',
-        // players: playerArray,
-      } as BaseController)
-      const controller = rooms_global.get(roomId)!
+        name: 'TEST LOBBY',
+        players: [],
+      })
+      const controller = rooms_global.get(id)!
       chunk.forEach((socketId) => controller.connectPlayer(socketId))
     })
   }

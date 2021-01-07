@@ -1,28 +1,24 @@
 import { v4 as uuid } from 'uuid'
 
 import { sleep } from '../helpers'
+import { getPlayerData } from '../redis'
 import { io } from '../server'
 import { players_global } from '../socket'
-// import { BaseController } from './'
 
 function makeRoomKey(id: string) {
   return `room.${id}`
 }
 
-interface BaseController {
-  id: string
-  invitesEnabled: boolean
-  name: string
-  state: 'LOBBY' | 'GAME'
+interface BaseControllerConstructor {
+  invitesEnabled?: boolean
   players: any[]
-  key: string
-
-  broadcast(data: any): void
-  request(type: 'STATE' | 'HEALTH'): void
-  connectPlayer(socketId: string): void
+  name?: string
+  state?: RoomState
 }
 
-export class Standard implements BaseController {
+type RoomState = 'LOBBY' | 'STARTED' | 'PAUSED' | 'ENDING' | 'STARTING'
+
+export abstract class BaseController {
   id
   invitesEnabled
   players
@@ -31,18 +27,18 @@ export class Standard implements BaseController {
   key
 
   constructor({
-    id,
     invitesEnabled = false,
     players,
     name = 'Test Realm',
     state = 'LOBBY',
-  }: BaseController) {
-    this.id = id
+  }: BaseControllerConstructor) {
+    const thisID = uuid()
+    this.id = thisID
     this.invitesEnabled = invitesEnabled
     this.players = players
     this.name = name
     this.state = state
-    this.key = makeRoomKey(id)
+    this.key = makeRoomKey(thisID)
   }
 
   // maybe hanle this inside of the queue, or wherever is creating the controller
@@ -59,17 +55,23 @@ export class Standard implements BaseController {
     io.to(this.key).emit(`server.request.${type}`)
   }
 
-  connectPlayer(socketId: string) {
+  async connectPlayer(socketId: string) {
     if (this.players.length < 4) {
-      io.sockets.sockets.get(socketId)?.join(this.key)
-      this.players.push(players_global.get(socketId))
-      this.broadcast({ players: this.players })
+      await io.sockets.sockets.get(socketId)?.join(this.key)
+      io.sockets.sockets.get(socketId)?.emit('server.whois')
+      this.players.push(await getPlayerData(socketId))
+      this.broadcast({
+        players: this.players,
+        id: this.id,
+        name: this.name,
+        state: this.state,
+      })
     } else {
       throw new Error('Lobby full!')
     }
 
     if (this.state === 'LOBBY' && this.players.length === 4) {
-      this.countdown()
+      this.transitionState('STARTING')
     }
   }
 
@@ -80,28 +82,40 @@ export class Standard implements BaseController {
       countdown--
       await sleep(1000)
     }
-    this.begin()
+    this.transitionState('STARTED')
+  }
+
+  async transitionState(to: RoomState) {
+    if (this.state === to) return // dont transition if state is the same
+    switch (to) {
+      case 'STARTING':
+        await this.countdown()
+      case 'STARTED':
+        this.begin()
+      case 'ENDING':
+        this.end()
+        break
+      case 'PAUSED':
+        //todo
+        break
+      case 'LOBBY':
+        break
+      default:
+        console.warn('transitionState: default!')
+    }
+    this.broadcast(to)
+    this.state = to
   }
 
   async begin() {
     this.broadcast({ start: true })
 
-    let duration = 15 // short for testing
-    // we will want to have a duration field for standard
-    // probably a class method for more complex modes. They
-    // all just extend BaseController anyways.
-
-    let signal = true
-    // while (duration >= 0) {
-    //   this.request('state')
-    //   duration--
-    //   await sleep(1000)
-    // }
     do {
       this.request('state')
-      signal = this.communicate()
+      const nextState = this.communicate()
+      this.transitionState(nextState)
       await sleep(1000)
-    } while (signal)
+    } while (this.state === 'STARTED')
     this.end()
   }
 
@@ -109,15 +123,35 @@ export class Standard implements BaseController {
     this.broadcast({ stop: true })
   }
 
-  abstract communicate(): boolean
+  abstract communicate(): RoomState
+  abstract setup(): void
 }
 
-class Race extends Standard {
-  constructor(race: BaseController = {}) {
-    super({})
+interface RaceConstructor extends BaseControllerConstructor {
+  duration?: number
+}
+export class Race extends BaseController {
+  duration: number = 60
+  cur: number = 0
+
+  constructor(race: RaceConstructor) {
+    super(race)
+    Object.assign(this, race)
+    // this.setup()
+  }
+
+  setup() {
+    const int = setInterval(() => {
+      if (this.cur === this.duration) {
+        clearInterval(int)
+      }
+      this.cur += 1
+    }, 1000)
   }
 
   communicate() {
-    return true
+    if (this.cur < this.duration) return 'STARTED'
+    else if (this.cur === this.duration) return 'ENDING'
+    return 'LOBBY'
   }
 }
