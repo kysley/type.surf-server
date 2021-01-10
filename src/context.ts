@@ -1,35 +1,45 @@
 import { PrismaClient } from '@prisma/client'
+import { Redis } from 'ioredis'
+import { verify } from 'jsonwebtoken'
 
-import { getCurrentUser } from './auth'
+import { redis } from './redis'
 
 export const prisma = new PrismaClient({ log: ['query', 'info', 'warn'] })
 
-// export type UserDetail = {
-//   id: string
-// }
-
-// export type UserContext = {
-//   getCurrentUser: () => Promise<UserDetail>
-// }
-
-// export interface Context {
-//   user: UserContext
-// }
-
-// export function createContext(contextParameters: Request): Context {
-//   return { user: getUserContext(contextParameters) }
-// }
-// export function getUserId(token: any | null | undefined) {
-//   const id = token?.id
-
-//   if (!id) {
-//     throw Error('Not Authorized.')
-//   }
-
-//   return id
-// }
-
 export type Context = {
-  db: PrismaClient
-  user: ReturnType<typeof getCurrentUser>
+  prisma: PrismaClient
+  userId: string
+  redis: Redis
+}
+
+export type Token = {
+  id: string
+}
+
+export const createContext = (ctx: any): Context => {
+  let userId: string
+  try {
+    let Authorization = ''
+    try {
+      Authorization = ctx.req.get('authorization')
+    } catch (e) {
+      Authorization = ctx?.connection?.context?.Authorization
+    }
+    const token = Authorization.replace('Bearer ', '')
+    const verifiedToken = verify(token, process.env.APP_SECRET!) as Token
+
+    if (!verifiedToken.id) {
+      userId = '-1'
+    } else {
+      userId = verifiedToken.id
+    }
+  } catch (e) {
+    console.log(e)
+    userId = '-1'
+  }
+  return {
+    prisma,
+    redis,
+    userId,
+  }
 }

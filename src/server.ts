@@ -2,18 +2,16 @@ import dotenv from 'dotenv'
 import { ApolloServer } from 'apollo-server-express'
 import express from 'express'
 import http from 'http'
-import { Server, Socket } from 'socket.io'
-import cors from 'cors'
+import { Server } from 'socket.io'
 
 dotenv.config()
 
 import { schema } from './schema'
-import { prisma } from './context'
-import { getCurrentUser } from './auth'
+import { createContext } from './context'
 
 const apollo = new ApolloServer({
   schema,
-  context: ({ req }) => ({ db: prisma, user: getCurrentUser(req) }),
+  context: createContext,
 })
 
 export const app = express()

@@ -17,7 +17,7 @@ export async function setPlayerData(key: string, player: any) {
 }
 
 export async function removePlayerData(key: string) {
-  return redis.hdel(key)
+  return redis.del(key)
 }
 
 export async function getPlayerData(key: string) {
