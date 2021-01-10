@@ -26,34 +26,51 @@ function roomFactory<T extends ROOM_TYPES>(
   return roomController.id
 }
 
-rooms_global.set('123', new Race({ players: [] }))
+rooms_global.set('123', new Race({}))
 
 io.on('connection', (socket: Socket) => {
-  let room: string
+  let room: string | undefined
   console.log(`incoming connection..${socket.id}`)
-  socket.emit('server.whois')
-  socket.on('client.whois', ({ userId, username }, callback) => {
-    callback({
-      status: 'ok!!!',
-    })
-    setPlayerData(socket.id, { id: userId, username })
-    console.log(userId, username)
-  })
+  // lets not whois right away. the user might not be logged in... etc
+  // socket.emit('server.whois')
+  // socket.on('client.whois', ({ userId, username }, callback) => {
+  //   callback({
+  //     status: 'ok!!!',
+  //   })
+  //   setPlayerData(socket.id, { id: userId, username })
+  //   console.log('client whois:', userId, username)
+  // })
   socket.on('client.response.*', ({ room, state }) => {})
   socket.on('client.queue', () => {
     queue.push(socket.id)
   })
-  socket.on('client.join', ({ roomId }) => {
+
+  socket.on('client.join', ({ roomId }, playerData) => {
     if (rooms_global.has(roomId)) {
       // try-catch this?
-      rooms_global.get(roomId)?.connectPlayer(socket.id)
+      rooms_global.get(roomId)?.connectPlayer(socket.id, playerData)
       room = roomId
       console.log('joined' + roomId)
     }
   })
 
+  socket.on('client.leave', ({ roomId }, userId) => {
+    console.log('player has left lobby')
+    if (rooms_global.has(roomId)) {
+      rooms_global.get(roomId)?.disconnectPlayer(socket.id)
+      room = undefined
+    }
+  })
+
   socket.on('disconnect', () => {
     removePlayerData(socket.id)
+    if (room) {
+      socket.leave(room)
+      if (rooms_global.has(room)) {
+        rooms_global.get(room)?.disconnectPlayer(socket.id)
+        room = undefined
+      }
+    }
     console.log(`lost connection...${socket.id}`)
   })
 })
@@ -69,7 +86,6 @@ setInterval(() => {
         invitesEnabled: true,
         state: 'LOBBY',
         name: 'TEST LOBBY',
-        players: [],
       })
       const controller = rooms_global.get(id)!
       chunk.forEach((socketId) => controller.connectPlayer(socketId))

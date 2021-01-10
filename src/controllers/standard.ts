@@ -1,9 +1,10 @@
-import { v4 as uuid } from 'uuid'
+import { customAlphabet } from 'nanoid'
 
 import { sleep } from '../helpers'
 import { getPlayerData } from '../redis'
 import { io } from '../server'
-import { players_global } from '../socket'
+
+const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvwxyz', 10)
 
 function makeRoomKey(id: string) {
   return `room.${id}`
@@ -11,7 +12,6 @@ function makeRoomKey(id: string) {
 
 interface BaseControllerConstructor {
   invitesEnabled?: boolean
-  players: any[]
   name?: string
   state?: RoomState
 }
@@ -21,33 +21,27 @@ type RoomState = 'LOBBY' | 'STARTED' | 'PAUSED' | 'ENDING' | 'STARTING'
 export abstract class BaseController {
   id
   invitesEnabled
-  players
+  players: any[] = []
+  playerSocketIds: any[] = []
   name
   state
   key
 
   constructor({
     invitesEnabled = false,
-    players,
     name = 'Test Realm',
     state = 'LOBBY',
   }: BaseControllerConstructor) {
-    const thisID = uuid()
+    const thisID = nanoid()
     this.id = thisID
     this.invitesEnabled = invitesEnabled
-    this.players = players
     this.name = name
     this.state = state
     this.key = makeRoomKey(thisID)
   }
 
-  // maybe hanle this inside of the queue, or wherever is creating the controller
-  // init() {
-  //   this.players.forEach((player) => this.connectPlayer)
-  // }
-
   broadcast(data: any) {
-    io.to(this.key).emit('server.broadcast', data)
+    io.to(this.key).emit('server.room.broadcast', data)
     return 'hi'
   }
 
@@ -55,11 +49,11 @@ export abstract class BaseController {
     io.to(this.key).emit(`server.request.${type}`)
   }
 
-  async connectPlayer(socketId: string) {
+  async connectPlayer(socketId: string, playerData: any) {
     if (this.players.length < 4) {
       await io.sockets.sockets.get(socketId)?.join(this.key)
-      io.sockets.sockets.get(socketId)?.emit('server.whois')
-      this.players.push(await getPlayerData(socketId))
+      this.playerSocketIds.push({ socketId, userId: playerData.userId })
+      this.players.push(playerData)
       this.broadcast({
         players: this.players,
         id: this.id,
@@ -73,6 +67,15 @@ export abstract class BaseController {
     if (this.state === 'LOBBY' && this.players.length === 4) {
       this.transitionState('STARTING')
     }
+  }
+
+  async disconnectPlayer(socketId: string) {
+    io.sockets.sockets.get(socketId)?.leave(this.key)
+    const userPair = this.playerSocketIds.filter(
+      (pair) => pair.socketId !== socketId,
+    )
+    this.players.filter((player) => player.userId !== userPair[0].userId)
+    this.broadcast({ players: this.players })
   }
 
   async countdown() {
