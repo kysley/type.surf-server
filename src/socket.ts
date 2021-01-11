@@ -26,21 +26,14 @@ function roomFactory<T extends ROOM_TYPES>(
   return roomController.id
 }
 
-rooms_global.set('123', new Race({}))
+rooms_global.set('123', new Race({ length: 300 }))
 
 io.on('connection', (socket: Socket) => {
   let room: string | undefined
   console.log(`incoming connection..${socket.id}`)
-  // lets not whois right away. the user might not be logged in... etc
-  // socket.emit('server.whois')
-  // socket.on('client.whois', ({ userId, username }, callback) => {
-  //   callback({
-  //     status: 'ok!!!',
-  //   })
-  //   setPlayerData(socket.id, { id: userId, username })
-  //   console.log('client whois:', userId, username)
-  // })
+
   socket.on('client.response.*', ({ room, state }) => {})
+
   socket.on('client.queue', () => {
     queue.push(socket.id)
   })
@@ -48,7 +41,7 @@ io.on('connection', (socket: Socket) => {
   socket.on('client.join', ({ roomId }, playerData) => {
     if (rooms_global.has(roomId)) {
       // try-catch this?
-      rooms_global.get(roomId)?.connectPlayer(socket.id, playerData)
+      rooms_global.get(roomId)?.connectPlayer(socket, playerData)
       room = roomId
       console.log('joined' + roomId)
     }
@@ -75,20 +68,21 @@ io.on('connection', (socket: Socket) => {
   })
 })
 
-// simple matchmaking
-setInterval(() => {
-  // players are in the queue
-  if (queue.length) {
-    const chunks = chunk(queue, 4) // room size
+// rethink this because we need to connect with a socket object
+// setInterval(() => {
+//   // players are in the queue
+//   if (queue.length) {
+//     const chunks = chunk(queue, 4) // room size
 
-    chunks.forEach((chunk) => {
-      const id = roomFactory(0, {
-        invitesEnabled: true,
-        state: 'LOBBY',
-        name: 'TEST LOBBY',
-      })
-      const controller = rooms_global.get(id)!
-      chunk.forEach((socketId) => controller.connectPlayer(socketId))
-    })
-  }
-}, 5000)
+//     chunks.forEach((chunk) => {
+//       const id = roomFactory(0, {
+//         invitesEnabled: true,
+//         state: 'LOBBY',
+//         name: 'TEST LOBBY',
+//         length: 300,
+//       })
+//       const controller = rooms_global.get(id)!
+//       chunk.forEach((socketId) => controller.connectPlayer(socket))
+//     })
+//   }
+// }, 5000)
