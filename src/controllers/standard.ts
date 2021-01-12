@@ -49,11 +49,14 @@ export abstract class BaseController {
     io.to(this.key).emit('server.room.broadcast', data)
   }
 
-  ack(data: any) {
+  ack(error: any, data: any) {
     console.log('ack', data)
     this.players = this.players.map((player) => {
       if (player.userId === data.userId) {
-        return data
+        return {
+          ...data,
+          ...player,
+        }
       }
       return player
     })
@@ -62,7 +65,9 @@ export abstract class BaseController {
 
   request(type: string) {
     this.playerSockets.forEach((pair) => {
-      pair.socket.emit(`server.request.${type}`, this.ack)
+      pair.socket.emit(`server.request.${type}`, (error, data) => {
+        this.ack(error, data)
+      })
     })
   }
 
@@ -176,7 +181,7 @@ export class Race extends BaseController {
   }
 
   update() {
-    this.request('state')
+    this.request('stats')
     if (this.cur < this.duration) this.transitionState('STARTED')
     else if (this.cur === this.duration) this.transitionState('ENDING')
     else this.transitionState('LOBBY')
