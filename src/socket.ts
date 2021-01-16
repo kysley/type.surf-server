@@ -55,12 +55,15 @@ io.on('connection', (socket: Socket) => {
     }
   })
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', async () => {
     removePlayerData(socket.id)
     if (room) {
       socket.leave(room)
       if (rooms_global.has(room)) {
-        rooms_global.get(room)?.disconnectPlayer(socket.id)
+        const signal = await rooms_global.get(room)?.disconnectPlayer(socket.id)
+        if (signal) {
+          rooms_global.delete(room)
+        }
         room = undefined
       }
     }

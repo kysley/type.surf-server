@@ -95,13 +95,18 @@ export abstract class BaseController {
     }
   }
 
-  async disconnectPlayer(socketId: string) {
+  async disconnectPlayer(socketId: string): Promise<boolean | void> {
     io.sockets.sockets.get(socketId)?.leave(this.key)
     const userPair = this.playerSockets.filter(
       (pair) => pair.socket.socketId !== socketId,
     )
     this.players.filter((player) => player.userId !== userPair[0].userId)
     this.broadcast({ players: this.players })
+
+    if (this.players.length === 0) {
+      this.end()
+      return true
+    }
   }
 
   async countdown(duration?: number) {
