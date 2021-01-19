@@ -49,8 +49,9 @@ export abstract class BaseController {
     invitesEnabled = false,
     name,
     state = 'LOBBY',
+    id,
   }: BaseControllerConstructor) {
-    const thisID = nanoid()
+    const thisID = id ?? nanoid()
     this.id = thisID
     this.invitesEnabled = invitesEnabled
     this.name = name ?? `Room ${thisID}`
@@ -102,9 +103,9 @@ export abstract class BaseController {
       throw new Error('Lobby full!')
     }
 
-    if (this.state === 'LOBBY' && this.players.length >= 2) {
-      this.transitionState('STARTING')
-    }
+    // if (this.state === 'LOBBY' && this.players.length >= 2) {
+    //   this.transitionState('STARTING')
+    // }
   }
 
   disconnectPlayer(userId: string): boolean | void {

@@ -21,7 +21,7 @@ export const ROOM_MAP = {
 //   return roomController.id
 // }
 
-rooms_global.set('123', new Race({ length: 300 }))
+rooms_global.set('123', new Race({ length: 300, id: '123' }))
 
 io.on('connection', (socket: Socket) => {
   let room: string | undefined
@@ -36,28 +36,27 @@ io.on('connection', (socket: Socket) => {
     }
   })
 
-  socket.on('client.queue', (mode) => {
-    // queue.push(socket)
-    // let exit = false
-    rooms_global.keys().forEach((key) => {
-      // if (!exit) {
-      const roomObj = rooms_global.get(key)
-      if (
-        roomObj?.mode === mode &&
-        (roomObj?.state === 'STARTING' || roomObj?.state === 'LOBBY')
-      ) {
-        roomObj.connectPlayer(socket, identity)
-        room = roomObj.id
-        console.log('joined' + roomObj.id)
-        return
-        // exit = true
+  socket.on('client.queue', (mode, callback) => {
+    if (!room) {
+      for (const key of rooms_global.keys()) {
+        const roomObj = rooms_global.get(key)
+        if (
+          roomObj?.mode === mode &&
+          (roomObj?.state === 'STARTING' || roomObj?.state === 'LOBBY')
+        ) {
+          // roomObj.connectPlayer(socket, identity)
+          // room = roomObj.id
+          // console.log('joined' + roomObj.id)
+          callback(roomObj.id)
+          return
+        }
       }
-      // }
-    })
-    const newRoom = new Race({})
-    rooms_global.set(newRoom.id, newRoom)
-    newRoom.connectPlayer(socket, identity)
-    room = newRoom.id
+      const newRoom = new Race({})
+      rooms_global.set(newRoom.id, newRoom)
+      // newRoom.connectPlayer(socket, identity)
+      // room = newRoom.id
+      callback(newRoom.id)
+    }
   })
 
   socket.on('client.stats', (stats) => {
@@ -94,7 +93,6 @@ io.on('connection', (socket: Socket) => {
   })
 
   socket.on('disconnect', async () => {
-    // removePlayerData(socket.id)
     if (room) {
       socket.leave(room)
       if (rooms_global.has(room)) {
@@ -103,7 +101,6 @@ io.on('connection', (socket: Socket) => {
           ?.disconnectPlayer(identity?.userId)
         if (signal) {
           rooms_global.delete(room)
-          // roomFactory(0, { length: 300 })
         }
       }
       room = undefined
@@ -111,34 +108,3 @@ io.on('connection', (socket: Socket) => {
     console.log(`lost connection...${socket.id}`)
   })
 })
-
-// setInterval(() => {
-//   if (queue.length) {
-//     const chunks = chunk(queue, 4)
-
-//     chunks.forEach((chunk) => {
-//       // const id = roomFactory(0, {
-//       //   length: 300,
-//       // })
-//     })
-//   }
-// }, 1000)
-
-// rethink this because we need to connect with a socket object
-// setInterval(() => {
-//   // players are in the queue
-//   if (queue.length) {
-//     const chunks = chunk(queue, 4) // room size
-
-//     chunks.forEach((chunk) => {
-//       const id = roomFactory(0, {
-//         invitesEnabled: true,
-//         state: 'LOBBY',
-//         name: 'TEST LOBBY',
-//         length: 300,
-//       })
-//       const controller = rooms_global.get(id)!
-//       chunk.forEach((socketId) => controller.connectPlayer(socket))
-//     })
-//   }
-// }, 5000)
