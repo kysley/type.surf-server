@@ -1,8 +1,5 @@
 import { Request } from 'express'
 import jwt from 'jsonwebtoken'
-// import { Request } from 'nexus/dist/runtime/schema/schema'
-
-// import { UserContext, UserDetail } from './context'
 
 type UserToken = {
   id: string

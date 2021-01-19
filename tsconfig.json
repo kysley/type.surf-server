@@ -19,6 +19,6 @@
   },
   "include": [
     "src",
-    "types.d.ts"
+    "types/*"
   ]
 }

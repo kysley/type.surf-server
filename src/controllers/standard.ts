@@ -2,8 +2,13 @@ import { customAlphabet } from 'nanoid'
 import { Socket } from 'socket.io'
 import { seed, grabWords } from 'wordkit'
 
+import {
+  BaseControllerConstructor,
+  Modes,
+  RaceConstructor,
+  RoomState,
+} from '../../types'
 import { sleep } from '../helpers'
-import { getPlayerData } from '../redis'
 import { io } from '../server'
 
 const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvwxyz', 10)
@@ -12,35 +17,43 @@ function makeRoomKey(id: string) {
   return `room.${id}`
 }
 
-interface BaseControllerConstructor {
-  invitesEnabled?: boolean
-  name?: string
-  state?: RoomState
+function or(comparator: any, operators: any[]) {
+  return operators.some((operator) => {
+    if (typeof operator === 'function') {
+      return operator(comparator)
+    } else {
+      return comparator === operator // this obv doesnt work well for functions but that is what deep compares are for
+    }
+  })
 }
 
-type RoomState = 'LOBBY' | 'STARTED' | 'PAUSED' | 'ENDING' | 'STARTING'
-
+// Mode:
+// Race: First person to finish the list of words
+// Circuit/Time Attack: Best 2 of 3? 3 of 5? Different words each time
+//
 export abstract class BaseController {
-  id
-  invitesEnabled
+  id: string
+  invitesEnabled: boolean
   players: any[] = []
-  playerSockets: any[] = [] //<{socket: Socket, userId: string}>
+  // playerSockets: any[] = [] //<{socket: Socket, userId: string}>
   words: string[] = []
-  name
-  state
-  key
+  name: string
+  state: RoomState
+  key: string
+  readyIds: string[] = []
+  abstract mode: Modes
 
   interval?: any = undefined
 
   constructor({
     invitesEnabled = false,
-    name = 'Test Realm',
+    name,
     state = 'LOBBY',
   }: BaseControllerConstructor) {
     const thisID = nanoid()
     this.id = thisID
     this.invitesEnabled = invitesEnabled
-    this.name = name
+    this.name = name ?? `Room ${thisID}`
     this.state = state
     this.key = makeRoomKey(thisID)
   }
@@ -49,13 +62,13 @@ export abstract class BaseController {
     io.to(this.key).emit('server.room.broadcast', data)
   }
 
-  ack(error: any, data: any) {
-    console.log('ack', data)
+  ack(data: any, userId: string) {
+    console.log('ack', data, userId)
     this.players = this.players.map((player) => {
-      if (player.userId === data.userId) {
+      if (player.userId === userId) {
         return {
-          ...data,
           ...player,
+          ...data,
         }
       }
       return player
@@ -63,20 +76,21 @@ export abstract class BaseController {
     this.broadcast({ players: this.players })
   }
 
-  request(type: string) {
-    this.playerSockets.forEach((pair) => {
-      pair.socket.emit(`server.request.${type}`, (error, data) => {
-        this.ack(error, data)
-      })
-    })
+  readyCheck(isReady: boolean, userId: string) {
+    if (isReady) {
+      this.readyIds.push(userId)
+      if (this.readyIds.length === this.players.length) {
+        this.transitionState('STARTING')
+      }
+    } else {
+      this.readyIds = this.readyIds.filter((id) => id !== userId)
+    }
   }
 
-  async connectPlayer(socket: Socket, playerData: any) {
+  async connectPlayer(socket: Socket, identity: any) {
     if (this.players.length < 4) {
-      // await io.sockets.sockets.get(socketId)?.join(this.key)
       socket.join(this.key)
-      this.playerSockets.push({ socket, userId: playerData.userId })
-      this.players.push(playerData)
+      this.players.push({ ...identity, stats: { wpm: 0 } })
       this.broadcast({
         players: this.players,
         id: this.id,
@@ -88,23 +102,18 @@ export abstract class BaseController {
       throw new Error('Lobby full!')
     }
 
-    if (this.state === 'LOBBY' && this.players.length === 4) {
+    if (this.state === 'LOBBY' && this.players.length >= 2) {
       this.transitionState('STARTING')
-    } else if (this.state === 'LOBBY' && this.players.length >= 2) {
-      this.countdown(10)
     }
   }
 
-  async disconnectPlayer(socketId: string): Promise<boolean | void> {
-    io.sockets.sockets.get(socketId)?.leave(this.key)
-    const userPair = this.playerSockets.filter(
-      (pair) => pair.socket.socketId !== socketId,
-    )
-    this.players.filter((player) => player.userId !== userPair[0].userId)
+  disconnectPlayer(userId: string): boolean | void {
+    this.players = this.players.filter((player) => player.userId !== userId)
     this.broadcast({ players: this.players })
+    this.readyCheck(false, userId)
 
     if (this.players.length === 0) {
-      this.end()
+      this.transitionState('ENDING')
       return true
     }
   }
@@ -123,7 +132,7 @@ export abstract class BaseController {
     if (this.state === to) return // dont transition if state is the same
     switch (to) {
       case 'STARTING':
-        await this.countdown()
+        this.countdown()
         break
       case 'STARTED':
         this.begin()
@@ -140,6 +149,7 @@ export abstract class BaseController {
         console.warn('transitionState: default!')
     }
     this.broadcast({ state: to })
+    console.log(to)
     this.state = to
   }
 
@@ -161,18 +171,15 @@ export abstract class BaseController {
   abstract setup(): void
 }
 
-interface RaceConstructor extends BaseControllerConstructor {
-  duration?: number
-  length: 60 | 120 | 180 | 300
-}
 export class Race extends BaseController {
   duration: number = 60
   cur: number = 0
+  mode = Modes.RACE
 
   constructor(race: RaceConstructor) {
     super(race)
     Object.assign(this, race)
-    const idcs = new seed({ seed: this.key }).nRandom(race.length)
+    const idcs = new seed({ seed: this.id }).nRandom(race.length || 300)
     this.words = grabWords(idcs).split('|')
   }
 
@@ -186,7 +193,6 @@ export class Race extends BaseController {
   }
 
   update() {
-    this.request('stats')
     if (this.cur < this.duration) this.transitionState('STARTED')
     else if (this.cur === this.duration) this.transitionState('ENDING')
     else this.transitionState('LOBBY')
