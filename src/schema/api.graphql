@@ -36,6 +36,7 @@ input MapWhereUniqueInput {
 
 type Mutation {
   RegisterWithDiscord(access: String!, type: String!): AuthPayload
+  wordset(length: Int!, punctuate: Boolean = false, seed: String): WordsetPayload
 }
 
 type Query {
@@ -85,4 +86,9 @@ enum Role {
 enum SortOrder {
   asc
   desc
+}
+
+type WordsetPayload {
+  seed: String
+  wordset: String
 }

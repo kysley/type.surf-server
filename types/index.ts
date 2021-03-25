@@ -9,6 +9,7 @@ export interface BaseControllerConstructor {
   invitesEnabled?: boolean
   name?: string
   state?: RoomState
+  id?: string
 }
 
 export interface RaceConstructor extends BaseControllerConstructor {

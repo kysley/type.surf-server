@@ -1,6 +1,6 @@
 import { customAlphabet } from 'nanoid'
 import { Socket } from 'socket.io'
-import { seed, grabWords } from 'wordkit'
+import { words } from 'wordkit'
 
 import {
   BaseControllerConstructor,
@@ -180,8 +180,9 @@ export class Race extends BaseController {
   constructor(race: RaceConstructor) {
     super(race)
     Object.assign(this, race)
-    const idcs = new seed({ seed: this.id }).nRandom(race.length || 300)
-    this.words = grabWords(idcs).split('|')
+    // const idcs = new seed({ seed: this.id })
+    // this.words = grabWords(idcs).split('|')
+    this.words = words(race.length || 60).split(',')
   }
 
   setup() {

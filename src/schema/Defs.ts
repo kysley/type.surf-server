@@ -57,6 +57,13 @@ export const AuthPayload = objectType({
   },
 })
 
+export const WordsetPayload = objectType({
+  name: 'WordsetPayload',
+  definition(t) {
+    t.string('wordset'), t.string('seed')
+  },
+})
+
 export const ResultInput = inputObjectType({
   name: 'ResultInput',
   definition(t) {

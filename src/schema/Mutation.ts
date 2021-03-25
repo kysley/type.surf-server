@@ -1,18 +1,14 @@
 import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
 import {
-  booleanArg,
-  idArg,
-  intArg,
   mutationField,
   stringArg,
   arg,
   nonNull,
+  booleanArg,
+  intArg,
 } from 'nexus'
-import { seed, grabWords } from 'wordkit'
 import got from 'got'
-
-import { redis } from '../redis'
+import { seed, words } from 'wordkit'
 
 // export const CreateAccount = mutationField('createAccount', {
 //   type: 'AuthPayload',
@@ -67,6 +63,7 @@ import { redis } from '../redis'
 //     }
 //   },
 // })
+
 export const RegisterWithDiscord = mutationField('RegisterWithDiscord', {
   type: 'AuthPayload',
   args: {
@@ -147,25 +144,27 @@ export const RegisterWithDiscord = mutationField('RegisterWithDiscord', {
 //   },
 // })
 
-// export const Wordset = mutationField('wordset', {
-//   type: 'String',
-//   args: {
-//     count: intArg(),
-//     seed: stringArg(),
-//     punctuate: booleanArg({ default: false }),
-//   },
-//   resolve: async (parent, args, ctx) => {
-//     const seededArray = new seed({ seed: args?.seed || undefined }).nRandom(
-//       args.count,
-//     )
-//     const set = grabWords(seededArray, { punctuate: args?.punctuate || false })
-//     const { id } = await ctx.user
-//     if (id) {
-//       await redis.set(id, set, 'ex', 60 * 5) // 5 mins
-//     }
-//     return set
-//   },
-// })
+export const Wordset = mutationField('wordset', {
+  type: 'WordsetPayload',
+  args: {
+    length: nonNull(intArg()),
+    seed: stringArg(),
+    punctuate: booleanArg({ default: false }),
+  },
+  resolve: async (parent, args, ctx) => {
+    const seedInstance = new seed({ seed: args?.seed })
+
+    const set = words(args.length, args.seed?.toString())
+    // const { id } = await ctx.user
+    // if (id) {
+    //   await redis.set(id, set, 'ex', 60 * 5) // 5 mins
+    // }
+    return {
+      wordset: set,
+      seed: seedInstance._seed?.toString(),
+    }
+  },
+})
 
 // export const CreateResult = mutationField('createResult', {
 //   type: 'Boolean',
