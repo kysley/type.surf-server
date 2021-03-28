@@ -31,21 +31,21 @@ model Result {
   id          String   @id @default(cuid())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  correct     Int
-  corrections Int
-  cpm         Int
-  rawCpm      Int
   wpm         Int
-  rawWpm      Int
-  incorrect   Int
-  wordIndex   Int
-  letterIndex Int
-  history     Int
+  acc         Int
+  cpm         Int
+  raw         Int
+  characters  String
+  mode        Mode
   punctuated  Boolean  @default(false)
-  state       String
   seed        String
   account     Account  @relation(fields: [accountId], references: [id])
   accountId   String
+}
+
+enum Mode {
+  TIME
+  WORDS
 }
 
 enum Role {

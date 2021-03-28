@@ -6,9 +6,12 @@ import {
   nonNull,
   booleanArg,
   intArg,
+  enumType,
 } from 'nexus'
 import got from 'got'
 import { seed, words } from 'wordkit'
+
+import { Mode } from './Defs'
 
 // export const CreateAccount = mutationField('createAccount', {
 //   type: 'AuthPayload',
@@ -154,7 +157,7 @@ export const Wordset = mutationField('wordset', {
   resolve: async (parent, args, ctx) => {
     const seedInstance = new seed({ seed: args?.seed })
 
-    const set = words(args.length, args.seed?.toString())
+    const set = words(args.length, args.seed)
     // const { id } = await ctx.user
     // if (id) {
     //   await redis.set(id, set, 'ex', 60 * 5) // 5 mins
@@ -163,6 +166,37 @@ export const Wordset = mutationField('wordset', {
       wordset: set,
       seed: seedInstance._seed?.toString(),
     }
+  },
+})
+
+export const CreateResult = mutationField('createresult', {
+  type: 'Result',
+  args: {
+    wpm: nonNull(intArg()),
+    raw: nonNull(intArg()),
+    seed: nonNull(stringArg()),
+    acc: nonNull(intArg()),
+    cpm: nonNull(intArg()),
+    characters: nonNull(stringArg()),
+    mode: nonNull('Mode'),
+  },
+  resolve: async (parent, args, ctx) => {
+    const id = ctx.userId
+
+    if (id) {
+      // const {wpm, raw, seed, acc ,cpm, characters} = args
+      return await ctx.prisma.result.create({
+        data: {
+          ...args,
+          account: {
+            connect: {
+              id,
+            },
+          },
+        },
+      })
+    }
+    return null
   },
 })
 

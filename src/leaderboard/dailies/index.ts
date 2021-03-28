@@ -9,4 +9,7 @@ const leaderboardQueue = new Queue('leaderboard queue', {
   },
 })
 
-leaderboardQueue.process(async (job) => {})
+leaderboardQueue.process(async (job, done) => {
+  redis.zadd(job.data.type, 'GT', job.data.speed, job.data.id)
+  done()
+})

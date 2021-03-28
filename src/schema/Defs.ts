@@ -33,17 +33,11 @@ export const Result = objectType({
   name: 'Result',
   definition(t) {
     t.model.account()
-    t.model.correct()
-    t.model.corrections()
     t.model.cpm()
     t.model.createdAt()
     t.model.id()
-    t.model.incorrect()
     // t.model.map()
-    t.model.rawCpm()
-    t.model.wordIndex()
     t.model.wpm()
-    t.model.rawCpm()
   },
 })
 
@@ -64,38 +58,12 @@ export const WordsetPayload = objectType({
   },
 })
 
-export const ResultInput = inputObjectType({
-  name: 'ResultInput',
-  definition(t) {
-    t.int('correct')
-    t.int('corrections')
-    t.int('cpm')
-    t.int('rawCpm')
-    t.int('wpm')
-    t.int('rawWpm')
-    t.int('incorrect')
-    t.int('wordIndex')
-    t.int('letterIndex')
-    t.int('history')
-    t.boolean('punctuated')
-    t.string('state')
-    t.string('seed')
-  },
-})
-
 export const AccountHistoryOrderByInput = inputObjectType({
   name: 'AccountHistoryOrderByInput',
   definition(t) {
     t.field('createdAt', { type: SortOrder })
     t.field('mode', { type: SortOrder })
     t.field('wpm', { type: SortOrder })
-  },
-})
-
-export const MapWhereUniqueInput = inputObjectType({
-  name: 'MapWhereUniqueInput',
-  definition(t) {
-    t.string('id')
   },
 })
 
@@ -109,6 +77,10 @@ export const ResultWhereUniqueInput = inputObjectType({
 export const Role = enumType({
   name: 'Role',
   members: ['ADMIN', 'BETA', 'PRO', 'USER'],
+})
+export const Mode = enumType({
+  name: 'Mode',
+  members: ['TIME', 'WORDS'],
 })
 
 export const SortOrder = enumType({

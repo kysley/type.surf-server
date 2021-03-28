@@ -30,12 +30,14 @@ type AuthPayload {
 
 scalar DateTime
 
-input MapWhereUniqueInput {
-  id: String
+enum Mode {
+  TIME
+  WORDS
 }
 
 type Mutation {
   RegisterWithDiscord(access: String!, type: String!): AuthPayload
+  createresult(acc: Int!, characters: String!, cpm: Int!, mode: Mode!, raw: Int!, seed: String!, wpm: Int!): Result
   wordset(length: Int!, punctuate: Boolean = false, seed: String): WordsetPayload
 }
 
@@ -45,31 +47,10 @@ type Query {
 
 type Result {
   account: Account!
-  correct: Int!
-  corrections: Int!
   cpm: Int!
   createdAt: DateTime!
   id: String!
-  incorrect: Int!
-  rawCpm: Int!
-  wordIndex: Int!
   wpm: Int!
-}
-
-input ResultInput {
-  correct: Int
-  corrections: Int
-  cpm: Int
-  history: Int
-  incorrect: Int
-  letterIndex: Int
-  punctuated: Boolean
-  rawCpm: Int
-  rawWpm: Int
-  seed: String
-  state: String
-  wordIndex: Int
-  wpm: Int
 }
 
 input ResultWhereUniqueInput {
