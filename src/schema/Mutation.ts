@@ -6,12 +6,9 @@ import {
   nonNull,
   booleanArg,
   intArg,
-  enumType,
 } from 'nexus'
 import got from 'got'
 import { seed, words } from 'wordkit'
-
-import { Mode } from './Defs'
 
 // export const CreateAccount = mutationField('createAccount', {
 //   type: 'AuthPayload',
@@ -169,16 +166,10 @@ export const Wordset = mutationField('wordset', {
   },
 })
 
-export const CreateResult = mutationField('createresult', {
+export const CreateResult = mutationField('CreateResult', {
   type: 'Result',
   args: {
-    wpm: nonNull(intArg()),
-    raw: nonNull(intArg()),
-    seed: nonNull(stringArg()),
-    acc: nonNull(intArg()),
-    cpm: nonNull(intArg()),
-    characters: nonNull(stringArg()),
-    mode: nonNull('Mode'),
+    input: nonNull(arg({ type: 'CreateResultInput' })),
   },
   resolve: async (parent, args, ctx) => {
     const id = ctx.userId
@@ -187,7 +178,7 @@ export const CreateResult = mutationField('createresult', {
       // const {wpm, raw, seed, acc ,cpm, characters} = args
       return await ctx.prisma.result.create({
         data: {
-          ...args,
+          ...args.input,
           account: {
             connect: {
               id,

@@ -28,6 +28,16 @@ type AuthPayload {
   token: String
 }
 
+input CreateResultInput {
+  acc: Int!
+  characters: String!
+  cpm: Int!
+  mode: Mode!
+  raw: Int!
+  seed: String!
+  wpm: Int!
+}
+
 scalar DateTime
 
 enum Mode {
@@ -36,8 +46,8 @@ enum Mode {
 }
 
 type Mutation {
+  CreateResult(input: CreateResultInput!): Result
   RegisterWithDiscord(access: String!, type: String!): AuthPayload
-  createresult(acc: Int!, characters: String!, cpm: Int!, mode: Mode!, raw: Int!, seed: String!, wpm: Int!): Result
   wordset(length: Int!, punctuate: Boolean = false, seed: String): WordsetPayload
 }
 
@@ -46,10 +56,15 @@ type Query {
 }
 
 type Result {
+  acc: Int!
   account: Account!
+  characters: String!
   cpm: Int!
   createdAt: DateTime!
   id: String!
+  mode: Mode!
+  raw: Int!
+  seed: String!
   wpm: Int!
 }
 
