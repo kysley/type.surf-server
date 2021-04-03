@@ -11,7 +11,7 @@ import {
 import { sleep } from '../helpers'
 import { io } from '../server'
 
-const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvwxyz', 10)
+const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvwxyz', 6)
 
 function makeRoomKey(id: string) {
   return `room.${id}`
@@ -109,6 +109,8 @@ export abstract class BaseController {
   }
 
   disconnectPlayer(userId: string): boolean | void {
+    console.log('disconnecting player ', userId)
+
     this.players = this.players.filter((player) => player.userId !== userId)
     this.broadcast({ players: this.players })
     this.readyCheck(false, userId)
@@ -131,6 +133,7 @@ export abstract class BaseController {
 
   async transitionState(to: RoomState) {
     if (this.state === to) return // dont transition if state is the same
+    console.log(`[TRANSITION] ${this.state} -> ${to}`)
     switch (to) {
       case 'STARTING':
         this.countdown()
@@ -145,6 +148,7 @@ export abstract class BaseController {
         //todo
         break
       case 'LOBBY':
+        this.state = 'LOBBY'
         break
       default:
         console.warn('transitionState: default!')
@@ -166,6 +170,7 @@ export abstract class BaseController {
   end() {
     clearInterval(this.interval)
     this.broadcast({ stop: true })
+    this.transitionState('LOBBY')
   }
 
   abstract update(): void
