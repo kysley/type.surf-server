@@ -81,6 +81,14 @@ io.on('connection', (socket: Socket) => {
       rooms_global.get(roomId)?.connectPlayer(socket, identity)
       room = roomId
       console.log('joined' + roomId)
+    } else {
+      const roomFromId = new Race({
+        id: roomId,
+      })
+      roomFromId.connectPlayer(socket, identity)
+      rooms_global.set(roomId, roomFromId)
+      room = roomId
+      console.log('created and joined' + roomId)
     }
   })
 
@@ -99,9 +107,10 @@ io.on('connection', (socket: Socket) => {
         const signal = rooms_global
           .get(room)
           ?.disconnectPlayer(identity?.userId)
-        if (signal) {
-          rooms_global.delete(room)
-        }
+        // Note: try not deleting room since they are in an LRU?
+        // if (signal) {
+        //   rooms_global.delete(room)
+        // }
       }
       room = undefined
     }
