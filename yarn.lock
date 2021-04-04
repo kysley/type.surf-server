@@ -3044,10 +3044,10 @@ wide-align@^1.1.0:
   dependencies:
     string-width "^1.0.2 || 2"
 
-wordkit@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/wordkit/-/wordkit-1.1.0.tgz#3f4ca189a39361d1ff4e20b621e2af5e4debd389"
-  integrity sha512-bXjLHknQ79jnFG0Asc0Vfw47eEtEWwAjx6r/UKo+4L0oHFH79DQaHrse21oic4hUv7yhKD0+IAASjJYUulvuhw==
+wordkit@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/wordkit/-/wordkit-1.1.1.tgz#c9e583de4922eba57d40e52b15d1159f9d464192"
+  integrity sha512-p6SvGj4/uaB3fhODNAtvACbruZNwi39Glvs3+rFpmNVDxbWCQeinHd5vHGnOV169VdJfkXdndLeWjQ1G3f7Zkw==
 
 wrappy@1:
   version "1.0.2"
