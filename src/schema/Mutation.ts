@@ -144,7 +144,7 @@ export const RegisterWithDiscord = mutationField('RegisterWithDiscord', {
 //   },
 // })
 
-export const Wordset = mutationField('wordset', {
+export const Wordset = mutationField('Wordset', {
   type: 'WordsetPayload',
   args: {
     length: nonNull(intArg()),
@@ -152,16 +152,15 @@ export const Wordset = mutationField('wordset', {
     punctuate: booleanArg({ default: false }),
   },
   resolve: async (parent, args, ctx) => {
-    const seedInstance = new seed({ seed: args?.seed })
+    let goseed = args.seed ? args.seed : new seed({})._seed
 
-    const set = words(args.length, args.seed)
     // const { id } = await ctx.user
     // if (id) {
     //   await redis.set(id, set, 'ex', 60 * 5) // 5 mins
     // }
     return {
-      wordset: set,
-      seed: seedInstance._seed?.toString(),
+      wordset: words(args.length, goseed),
+      seed: goseed?.toString(),
     }
   },
 })

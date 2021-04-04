@@ -48,11 +48,12 @@ enum Mode {
 type Mutation {
   CreateResult(input: CreateResultInput!): Result
   RegisterWithDiscord(access: String!, type: String!): AuthPayload
-  wordset(length: Int!, punctuate: Boolean = false, seed: String): WordsetPayload
+  Wordset(length: Int!, punctuate: Boolean = false, seed: String): WordsetPayload
 }
 
 type Query {
-  me: Account
+  Me: Account
+  User(id: ID!): Account
 }
 
 type Result {
