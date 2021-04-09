@@ -31,6 +31,7 @@ function or(comparator: any, operators: any[]) {
 // Race: First person to finish the list of words
 // Circuit/Time Attack: Best 2 of 3? 3 of 5? Different words each time
 //
+
 export abstract class BaseController {
   id: string
   invitesEnabled: boolean
@@ -116,7 +117,7 @@ export abstract class BaseController {
     this.readyCheck(false, userId)
 
     if (this.players.length === 0) {
-      this.transitionState('ENDING')
+      this.transitionState('WAITING')
       return true
     }
   }
@@ -150,6 +151,9 @@ export abstract class BaseController {
       case 'LOBBY':
         this.state = 'LOBBY'
         break
+      case 'WAITING':
+        this.state = 'WAITING'
+        break
       default:
         console.warn('transitionState: default!')
     }
@@ -170,7 +174,7 @@ export abstract class BaseController {
   end() {
     clearInterval(this.interval)
     this.broadcast({ stop: true })
-    this.transitionState('LOBBY')
+    this.transitionState('WAITING')
   }
 
   abstract update(): void

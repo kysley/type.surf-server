@@ -1,4 +1,10 @@
-export type RoomState = 'LOBBY' | 'STARTED' | 'PAUSED' | 'ENDING' | 'STARTING'
+export type RoomState =
+  | 'LOBBY'
+  | 'STARTED'
+  | 'PAUSED'
+  | 'ENDING'
+  | 'STARTING'
+  | 'WAITING'
 
 export enum Modes {
   RACE = 'RACE',
